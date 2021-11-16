@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->datetime('birthday')->nullable();
-            $table->bigInteger('phone_number')->nullable();
+            $table->string('phone_number')->nullable();
             
             //! TODO - add foreign key to 'roles'
             $table->unsignedBigInteger('role_id');
