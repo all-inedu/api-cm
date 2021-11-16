@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Module;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ModuleController extends Controller
 {
@@ -24,6 +25,10 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
+        if (Module::where('module_name', $request->get('module_name'))->exists()) {
+            return response()->json(['success' => false, 'error' => 'Module name already exists.']);
+        }
+
         try {
             
             Module::create([
@@ -34,7 +39,9 @@ class ModuleController extends Controller
                 'status'      => $request->get('status')
             ]);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
+
+            Log::error($e->getMessage());
         }
 
         return response()->json(['success' => true, 'message' => 'Module has successfully stored'], 201);

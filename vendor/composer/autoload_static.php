@@ -526,6 +526,13 @@ class ComposerStaticInit4fce6d2748461113b40ce74b1ffda471
     );
 
     public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Rap2hpoutre\\LaravelLogViewer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src',
+            ),
+        ),
         'M' => 
         array (
             'Mockery' => 
@@ -538,16 +545,23 @@ class ComposerStaticInit4fce6d2748461113b40ce74b1ffda471
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\Api\\V1\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/V1/AuthController.php',
+        'App\\Http\\Controllers\\Api\\V1\\ModuleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/V1/ModuleController.php',
+        'App\\Http\\Controllers\\Api\\V1\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/V1/ResetPasswordController.php',
+        'App\\Http\\Controllers\\Api\\V1\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/V1/UserController.php',
+        'App\\Http\\Controllers\\Api\\V1\\VerificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/V1/VerificationController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
+        'App\\Http\\Middleware\\JwtMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/JwtMiddleware.php',
         'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => __DIR__ . '/../..' . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustHosts' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustHosts.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Models\\Module' => __DIR__ . '/../..' . '/app/Models/Module.php',
         'App\\Models\\Roles' => __DIR__ . '/../..' . '/app/Models/Roles.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
@@ -4461,6 +4475,12 @@ class ComposerStaticInit4fce6d2748461113b40ce74b1ffda471
         'Ramsey\\Uuid\\UuidInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/UuidInterface.php',
         'Ramsey\\Uuid\\Validator\\GenericValidator' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/GenericValidator.php',
         'Ramsey\\Uuid\\Validator\\ValidatorInterface' => __DIR__ . '/..' . '/ramsey/uuid/src/Validator/ValidatorInterface.php',
+        'Rap2hpoutre\\LaravelLogViewer\\BaseController' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/controllers/LogViewerController.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewer' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/LaravelLogViewer.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewerServiceProvider' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/LaravelLogViewerServiceProvider.php',
+        'Rap2hpoutre\\LaravelLogViewer\\Level' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/Level.php',
+        'Rap2hpoutre\\LaravelLogViewer\\LogViewerController' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/controllers/LogViewerController.php',
+        'Rap2hpoutre\\LaravelLogViewer\\Pattern' => __DIR__ . '/..' . '/rap2hpoutre/laravel-log-viewer/src/Rap2hpoutre/LaravelLogViewer/Pattern.php',
         'ReturnTypeWillChange' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
         'SebastianBergmann\\CliParser\\AmbiguousOptionException' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
         'SebastianBergmann\\CliParser\\Exception' => __DIR__ . '/..' . '/sebastian/cli-parser/src/exceptions/Exception.php',

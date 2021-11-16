@@ -43,6 +43,7 @@ class AuthController extends Controller
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['success' => false, 'error' => 'Wrong password'], 400);
+                //! NOT USED BUT USABLE
                 return response()->json(['error' => 'We can\'t find an account with this credentials. Please make sure you entered the right information and you have verified your email address'], 400);
             }
         } catch (JWTException $e) {
@@ -51,10 +52,9 @@ class AuthController extends Controller
         }
 
         $currentUser = Auth::user();
-        $role_id = $currentUser->role_id;
-        $is_verified = $currentUser->is_verified;
+        $currentUser['token'] = $token;
 
-        return response()->json(['success' => true, 'data' => ['token' => $token, 'role_id' => $role_id, 'is_verified' => $is_verified]], 200);
+        return response()->json(['success' => true, 'data' => $currentUser], 200);
     }
 
     public function logout(Request $request)

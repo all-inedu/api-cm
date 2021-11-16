@@ -23,6 +23,8 @@ use App\Http\Controllers\Api\V1\UserController;
 //     return $request->user();
 // });
 
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
 Route::group(['prefix' => 'v1'], function() {
     //! Verification
     Route::post('email/verification-notification', [VerificationController::class, 'verificationNotification'])->middleware(['auth:api'])->name('verification.send');
