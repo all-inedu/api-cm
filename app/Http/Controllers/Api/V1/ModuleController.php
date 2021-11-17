@@ -8,9 +8,31 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Module;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ModuleController extends Controller
 {
+
+    public function list(Request $request)
+    {
+        $param = $request->param;
+        if (($param == 1) || ($param == 0) || ($param == null)) {
+            $module = DB::table('modules');
+
+            switch (is_numeric($param)) {
+                case (($param == 1) || ($param == 0)):
+                    $module->where('status', $param);
+                    break;
+            }
+
+            $module = $module->get();
+
+            return response()->json(['success' => true, 'data' => $module], 200);
+        }
+
+        return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
+        
+    }
     
     public function store(Request $request)
     {

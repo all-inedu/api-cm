@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use DateTime;
 
 class AuthController extends Controller
 {
@@ -77,20 +78,37 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
+        Validator::extend('olderThan', function($attribute, $value, $parameters)
+        {
+            $minAge = ( ! empty($parameters)) ? (int) $parameters[0] : 13;
+            return (new DateTime)->diff(new DateTime($value))->y >= $minAge;
+
+            // or the same using Carbon:
+            // return Carbon\Carbon::now()->diff(new Carbon\Carbon($value))->y >= $minAge;
+        });
+
+        //Error messages
+        $messages = [
+            "birthday.older_than" => "You must be 15 years old or above"
+        ];
+
         $validator = Validator::make($request->all(), [
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
-            'birthday'     => 'required',
+            'birthday'     => 'required|olderThan:14',
             'phone_number' => 'required|max:25',
             'role_id'      => 'required|integer',
             'email'        => 'required|string|email|max:255|unique:users',
             'password'     => 'required|string|min:6|confirmed',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
 
             return response()->json(['success' => false, 'error' => $validator->errors()], 400);
         }
+
+        echo 'a';
+        exit;
 
         $name = $request->first_name.' '.$request->last_name;
         $email = $request->email;

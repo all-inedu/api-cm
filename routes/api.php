@@ -44,7 +44,8 @@ Route::group(['prefix' => 'v1'], function() {
         //* Select User *//
         Route::get('user/{id?}', [UserController::class, 'getDataUser']);
 
-        //* Post Module *//
+        //* Module *//
+        Route::get('module/{param?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
     });
 });
