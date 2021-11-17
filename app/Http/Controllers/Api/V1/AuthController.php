@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -77,7 +79,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-
+        //* CUSTOM VALIDATOR FOR BIRTHDAY *//
         Validator::extend('olderThan', function($attribute, $value, $parameters)
         {
             $minAge = ( ! empty($parameters)) ? (int) $parameters[0] : 13;
@@ -107,9 +109,6 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 400);
         }
 
-        echo 'a';
-        exit;
-
         $name = $request->first_name.' '.$request->last_name;
         $email = $request->email;
         $password = $request->password;
@@ -136,13 +135,18 @@ class AuthController extends Controller
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        $subject = "Please verify your email address.";
-        Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject) {
-                $mail->from(getenv('FROM_EMAIL_ADDRESS'), "no-reply@all-inedu.com");
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+        try {
+            $subject = "Please verify your email address.";
+            Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
+                function($mail) use ($email, $name, $subject) {
+                    $mail->from(getenv('FROM_EMAIL_ADDRESS'), "no-reply@all-inedu.com");
+                    $mail->to($email, $name);
+                    $mail->subject($subject);
+                });
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+        
 
         return response()->json(compact('user', 'token'), 201);
     }

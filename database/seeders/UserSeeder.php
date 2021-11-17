@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -24,7 +25,7 @@ class UserSeeder extends Seeder
                 'role_id' => 2,
                 'email' => 'admin@all-inedu.com', //TODO diganti sesuai real email admin 
                 'email_verified_at' => Carbon::now(),
-                'password' => 'admin123',
+                'password' => Hash::make('admin123'),
                 'address' => null,
                 'total_exp' => 0,
                 'profile_picture' => null,
