@@ -63,8 +63,13 @@ class UserController extends Controller
                 $users = DB::table('users')->where('email', 'like', '%'.$value.'%')
                             ->paginate($this->paginationStudent);
 
+            } else if ($category == "is_verified") {
+
+                $users = DB::table('users')->where('is_verified', $value)
+                            ->paginate($this->paginationStudent);
+
             } else {
-                
+
                 $users = DB::table('users')->paginate($this->paginationStudent);
 
             }
