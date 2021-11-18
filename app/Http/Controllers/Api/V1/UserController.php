@@ -50,7 +50,7 @@ class UserController extends Controller
         $category = $request->category;
         $value = $request->value;
 
-        if ( ($category) && ($value) ) {
+        if ( (isset($category)) && (isset($value)) ) {
 
             if ($category == "name") {
 
