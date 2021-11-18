@@ -19,6 +19,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
+    /* NEW VARIABLES */
+    public const PAGINATION_PAGE_STUDENT = 9;
+
     /**
      * The controller namespace for the application.
      *

@@ -39,13 +39,15 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::group(['middleware' => ['jwt.verify']], function () {
+    // Route::group(['middleware' => ['jwt.verify']], function () {
 
         //* Select User *//
         Route::get('user/{id?}', [UserController::class, 'getDataUser']);
 
+        Route::post('filter/student', [UserController::class, 'filterUser']);
+
         //* Module *//
         Route::get('module/{param?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
-    });
+    // });
 });
