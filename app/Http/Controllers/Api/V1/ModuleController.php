@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class ModuleController extends Controller
 {
-
+    
+    //! FOR ADMIN
     public function list(Request $request)
     {
         $param = $request->param;
@@ -67,7 +68,7 @@ class ModuleController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Module has successfully stored'], 201);
-
-
     }
+    //! FOR ADMIN
+    
 }
