@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePartsTable extends Migration
+class CreateElementDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreatePartsTable extends Migration
      */
     public function up()
     {
-        Schema::create('parts', function (Blueprint $table) {
+        Schema::create('element_details', function (Blueprint $table) {
             $table->id();
             //! TODO - add foreign key to 'roles'
-            $table->unsignedBigInteger('outline_id');
-            $table->foreign('outline_id')->references('id')->on('outlines')->onUpdate('cascade')->onDelete('cascade');
-
-            $table->string('name');
+            $table->unsignedBigInteger('element_id');
+            $table->foreign('element_id')->references('id')->on('elements')->onUpdate('cascade')->onDelete('cascade');
+            $table->text('answer');
+            $table->boolean('value');
+            $table->integer('point');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreatePartsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parts');
+        Schema::dropIfExists('element_details');
     }
 }

@@ -16,14 +16,14 @@ class CreateElementsTable extends Migration
         Schema::create('elements', function (Blueprint $table) {
             $table->id();
             //! TODO - add foreign key to 'roles'
-            $table->unsignedBigInteger('part_id');
-            $table->foreign('part_id')->references('id')->on('parts')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('sub_part_id');
+            $table->foreign('sub_part_id')->references('id')->on('sub_parts')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('category_element');
-            $table->string('accordion_title');
-            $table->text('content');
-            $table->tinyInteger('parent');
-            $table->integer('order');
+            $table->text('description')->nullable();
+            $table->text('video_link')->nullable();
+            $table->text('question')->nullable();
+            $table->integer('total_point');
             $table->timestamps();
         });
     }

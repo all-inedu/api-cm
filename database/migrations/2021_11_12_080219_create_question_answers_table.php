@@ -16,13 +16,11 @@ class CreateQuestionAnswersTable extends Migration
         Schema::create('question_answers', function (Blueprint $table) {
             $table->id();
             //! TODO - add foreign key to 'roles'
-            $table->unsignedBigInteger('element_id');
-            $table->foreign('element_id')->references('id')->on('elements')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('element_detail_id');
+            $table->foreign('element_detail_id')->references('id')->on('element_details')->onUpdate('cascade')->onDelete('cascade');
             //! TODO - add foreign key to 'roles'
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            
-            $table->text('answer');
             $table->timestamps();
         });
     }
