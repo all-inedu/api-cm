@@ -22,9 +22,9 @@ class UserController extends Controller
         $id = $request->id;
         try {
             if (is_numeric($id)) {
-                $user = DB::table('users')->where('role_id', 1)->where('id', $request->id)->paginate(15);
+                $user = DB::table('users')->where('role_id', 1)->where('id', $request->id)->paginate(9);
             } else if ($id == null) {
-                $user = DB::table('users')->where('role_id', 1)->paginate(15);
+                $user = DB::table('users')->where('role_id', 1)->paginate(9);
             } else if ($id == "count"){
                 $user = DB::table('users')->where('role_id', 1)->count();
             } else {
