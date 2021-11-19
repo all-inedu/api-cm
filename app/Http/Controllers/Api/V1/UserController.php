@@ -54,7 +54,8 @@ class UserController extends Controller
 
             if ($category == "name") {
 
-                $users = DB::table('users')->where(function($query, $value) {
+                $users = DB::table('users')
+                            ->where(function($query) use ($value) {
                                 $query->where('first_name', 'like', '%'.$value.'%')
                                     ->orwhere('last_name', 'like', '%'.$value.'%');
                             })->where('role_id', 1)
