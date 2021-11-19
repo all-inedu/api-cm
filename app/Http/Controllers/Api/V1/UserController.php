@@ -54,23 +54,28 @@ class UserController extends Controller
 
             if ($category == "name") {
 
-                $users = DB::table('users')->where('first_name', 'like', '%'.$value.'%')
-                            ->orwhere('last_name', 'like', '%'.$value.'%')
+                $users = DB::table('users')->where(function($query, $value) {
+                                $query->where('first_name', 'like', '%'.$value.'%')
+                                    ->orwhere('last_name', 'like', '%'.$value.'%');
+                            })->where('role_id', 1)
                             ->paginate($this->paginationStudent);
 
             } else if ($category == "email") {
 
                 $users = DB::table('users')->where('email', 'like', '%'.$value.'%')
+                            ->where('role_id', 1)
                             ->paginate($this->paginationStudent);
 
             } else if ($category == "is_verified") {
 
+                $value = ($value == "true" || $value == 1) ? 1 : 0;
                 $users = DB::table('users')->where('is_verified', $value)
+                            ->where('role_id', 1)
                             ->paginate($this->paginationStudent);
 
             } else {
 
-                $users = DB::table('users')->paginate($this->paginationStudent);
+                $users = DB::table('users')->where('role_id', 1)->paginate($this->paginationStudent);
 
             }
 

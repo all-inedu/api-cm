@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 3 ; $i < 15 ; $i++) {
+        for ($i = 3 ; $i < 120 ; $i++) {
             $array[] = array(
                 'first_name' => 'student',
                 'last_name' => 'dummy '.$i,
