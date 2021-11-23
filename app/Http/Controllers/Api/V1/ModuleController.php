@@ -13,6 +13,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
 
+use function PHPSTORM_META\type;
+
 class ModuleController extends Controller
 {
     private $paginationModule;
@@ -20,6 +22,26 @@ class ModuleController extends Controller
     public function __construct() {
 
         $this->paginationModule = RouteServiceProvider::PAGINATION_PAGE_MODULE;
+    }
+
+    public function findModuleByName(Request $request)
+    {
+        $keyword = $request->get('keyword');
+        $module = DB::table('modules');
+
+        if ($keyword != "") {
+            try {
+                $module = $module->where('module_name', 'like', '%'.$keyword.'%')->get();
+                return response()->json(['success' => true, 'data' => $module]);
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+                return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
+            }
+        }
+
+        return response()->json(['success' => true, 'data' => $module->get()]);
+
     }
     
     public function list(Request $request)

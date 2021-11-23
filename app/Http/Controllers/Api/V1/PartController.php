@@ -15,7 +15,7 @@ class PartController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'outline_id' => 'required|numeric',
+            'outline_id' => 'required|numeric|exists:outlines,id',
             'name'       => 'required'
         ]);
 

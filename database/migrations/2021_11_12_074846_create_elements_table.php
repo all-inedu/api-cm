@@ -16,8 +16,8 @@ class CreateElementsTable extends Migration
         Schema::create('elements', function (Blueprint $table) {
             $table->id();
             //! TODO - add foreign key to 'roles'
-            $table->unsignedBigInteger('sub_part_id');
-            $table->foreign('sub_part_id')->references('id')->on('sub_parts')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('part_id');
+            $table->foreign('part_id')->references('id')->on('parts')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('category_element');
             $table->text('description')->nullable();
