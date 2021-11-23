@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         for ($i = 3 ; $i < 120 ; $i++) {
             $array[] = array(
-                'first_name' => 'student',
+                'first_name' => 'user',
                 'last_name' => 'dummy '.$i,
                 'birthday' => '1995-10-10',
                 'phone_number' => '08122366457',
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
                 'is_verified' => 1
             ),
             array(
-                'first_name' => 'student',
+                'first_name' => 'user',
                 'last_name' => 'dummy',
                 'birthday' => '1995-10-10',
                 'phone_number' => '08122366457',
@@ -81,7 +81,7 @@ class UserSeeder extends Seeder
                 'is_verified' => 1
             ),
             array(
-                'first_name' => 'student',
+                'first_name' => 'user',
                 'last_name' => 'dummy 2',
                 'birthday' => '1995-10-10',
                 'phone_number' => '08122366457',

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,7 @@ class Module extends Model
      * @var string[]
      */
     protected $fillable = [
-        'module_name',
-        'desc',
-        'category_id',
-        'price',
+        'name',
         'status'
     ];
 }

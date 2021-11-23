@@ -17,7 +17,10 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('module_name');
             $table->text('desc');
-            $table->string('category')->nullable();
+
+            //! TODO - add foreign key to 'roles'
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->string('price');
             $table->boolean('status');
             $table->timestamps();

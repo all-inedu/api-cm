@@ -28,12 +28,16 @@ class UserController extends Controller
         $id = $request->id;
         try {
             if (is_numeric($id)) {
-                $user = DB::table('users')->where('role_id', 1)->where('id', $request->id)->paginate($this->paginationStudent);
+
+                $user = DB::table('users')->where('role_id', 1)->where('id', $request->id)->get();
             } else if ($id == null) {
+
                 $user = DB::table('users')->where('role_id', 1)->paginate($this->paginationStudent);
             } else if ($id == "count"){
+
                 $user = DB::table('users')->where('role_id', 1)->count();
             } else {
+
                 return response()->json(['success' => false, 'error' => "Invalid Parameter"]);
             }
         } catch (Exception $e) {

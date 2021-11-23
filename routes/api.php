@@ -3,10 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\ModuleController;
+use App\Http\Controllers\Api\V1\OutlineController;
+use App\Http\Controllers\Api\V1\PartController;
 use App\Http\Controllers\Api\V1\VerificationController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Models\Outline;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +51,14 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('filter/student', [UserController::class, 'filterUser']);
 
         //* Module *//
-        Route::get('module/{param?}', [ModuleController::class, 'list']);
+        Route::get('module/{id?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
+
+        Route::get('category/all', [CategoryController::class, 'retrieve']);
+
+        Route::get('outline/{module_id?}', [OutlineController::class, 'getListOutlineByModule']);
+        Route::post('outline', [OutlineController::class, 'store']);
+
+        Route::post('part', [PartController::class, 'store']);
     // });
 });

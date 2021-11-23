@@ -21,6 +21,7 @@ class RouteServiceProvider extends ServiceProvider
 
     /* NEW VARIABLES */
     public const PAGINATION_PAGE_STUDENT = 9;
+    public const PAGINATION_PAGE_MODULE = 10;
 
     /**
      * The controller namespace for the application.
