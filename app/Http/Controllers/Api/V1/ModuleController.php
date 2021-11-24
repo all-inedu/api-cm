@@ -102,7 +102,7 @@ class ModuleController extends Controller
              
                 $file = $request->file('thumbnail') ;
                 $fileName = $file->getClientOriginalName() ;
-                $destinationPath = public_path().'/images' ;
+                $destinationPath = public_path().'/uploaded_file' ;
                 $file->move($destinationPath,$fileName);
             }
 
