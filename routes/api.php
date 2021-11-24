@@ -60,6 +60,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('outline/{module_id?}', [OutlineController::class, 'getListOutlineByModule']);
         Route::post('outline', [OutlineController::class, 'store']);
 
+        Route::get('part/all', [PartController::class, 'list']);
         Route::post('part', [PartController::class, 'store']);
     // });
 });

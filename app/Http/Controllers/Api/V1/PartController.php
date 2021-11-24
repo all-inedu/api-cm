@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class PartController extends Controller
 {
+    public function list(Request $request)
+    {
+        return Part::getQuery()->orderBy('created_at', 'asc')->get();
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
