@@ -68,11 +68,13 @@ class ModuleController extends Controller
     
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'module_name' => 'required|string|max:255',
             'desc'        => 'required',
             'category_id' => 'required|numeric|exists:categories,id',
-            'price'       => 'required'
+            'price'       => 'required',
+            'thumbnail'   => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -82,6 +84,8 @@ class ModuleController extends Controller
         if (Module::where('module_name', $request->get('module_name'))->exists()) {
             return response()->json(['success' => false, 'error' => 'Module name already exists.']);
         }
+
+        $file = $fileName = $destinationPath = '';
 
         try {
             
@@ -94,14 +98,26 @@ class ModuleController extends Controller
             //     '".$request->get('status')."'
             // )");
 
+            if($file = $request->hasFile('thumbnail')) {
+             
+                $file = $request->file('thumbnail') ;
+                $fileName = $file->getClientOriginalName() ;
+                $destinationPath = public_path().'/images' ;
+                $file->move($destinationPath,$fileName);
+            }
+
+            $array = [
+                'module_name' => $request->module_name,
+                'desc'        => $request->desc,
+                'category_id' => $request->category_id,
+                'price'       => $request->price,
+                'thumbnail'   => $fileName,
+                'status'      => $request->status
+            ];
+
             //* USED *//
-            Module::create([
-                'module_name' => $request->get('module_name'),
-                'desc'        => $request->get('desc'),
-                'category_id' => $request->get('category_id'),
-                'price'       => $request->get('price'),
-                'status'      => $request->get('status')
-            ]);
+            Module::create($array);
+
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);

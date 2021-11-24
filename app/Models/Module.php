@@ -19,6 +19,7 @@ class Module extends Model
         'desc',
         'category_id',
         'price',
+        'thumbnail',
         'status'
     ];
 }
