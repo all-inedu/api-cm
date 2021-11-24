@@ -22,6 +22,7 @@ class CreateModulesTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->string('price');
+            $table->text('thumbnail')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });
