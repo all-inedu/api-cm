@@ -14,8 +14,17 @@ class PartSeeder extends Seeder
      */
     public function run()
     {
-        $data = array();
+        $data = array(
+            array(
+                'outline_id' => 1,
+                'name' => 'This is Part A'
+            ),
+            array(
+                'outline_id' => 2,
+                'name' => 'This is Part B'
+            )
+        );
 
-        DB::table('part')->insert($data);
+        DB::table('parts')->insert($data);
     }
 }

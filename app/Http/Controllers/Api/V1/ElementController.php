@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class ElementController extends Controller
 {
+    public function list(Request $request)
+    {
+        return Element::with('parts')->get();
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -29,7 +34,7 @@ class ElementController extends Controller
         try {
             
             Element::create([
-                'part_id'          => $request->outline_id,
+                'part_id'          => $request->part_id,
                 'category_element' => $request->category_element,
                 'description'      => $request->description,
                 'video_link'       => $request->video_link,

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\PartController;
 use App\Http\Controllers\Api\V1\VerificationController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\ElementController;
 use App\Models\Outline;
 
 /*
@@ -63,6 +64,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('part/all', [PartController::class, 'list']);
         Route::post('part', [PartController::class, 'store']);
 
+        Route::get('element/all', [ElementController::class, 'list']);
         Route::post('element', [ElementController::class, 'store']);
 
         Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);

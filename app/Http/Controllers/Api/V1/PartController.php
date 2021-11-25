@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Part;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -35,8 +36,10 @@ class PartController extends Controller
         try {
             
             Part::create([
-                'outline_id'  => $request->get('outline_id'),
-                'name' => $request->get('name')
+                'outline_id' => $request->get('outline_id'),
+                'name'       => $request->get('name'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
         } catch (QueryException $qe) {
 

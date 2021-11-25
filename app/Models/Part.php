@@ -23,4 +23,9 @@ class Part extends Model
     {
         return $this->belongsTo(Outline::class, 'outline_id', 'id');
     }
+
+    public function elements()
+    {
+        return $this->hasMany(Element::class, 'part_id', 'id');
+    }
 }

@@ -24,4 +24,9 @@ class Element extends Model
         'question',
         'total_point'
     ];
+
+    public function parts()
+    {
+        return $this->belongsTo(Part::class, 'part_id', 'id');
+    }
 }
