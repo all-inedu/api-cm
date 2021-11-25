@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Section extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'sections';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [
-        'name',
-        'status'
+        'name'
     ];
 
-    public function modules()
+    public function outlines()
     {
-        return $this->hasMany(Module::class, 'category_id', 'id');
+        return $this->hasMany(Outline::class, 'section_id', 'id');
     }
 }

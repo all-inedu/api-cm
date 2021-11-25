@@ -24,6 +24,7 @@ class ModuleSeeder extends Seeder
                 'price'       => 'FREE',
                 'thumbnail'   => null,
                 'status'      => 1,
+                'progress'    => 0,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now()
             ),
@@ -34,6 +35,7 @@ class ModuleSeeder extends Seeder
                 'price'       => 'FREE',
                 'thumbnail'   => null,
                 'status'      => 1,
+                'progress'    => 0,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now()
             )

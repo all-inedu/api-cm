@@ -18,4 +18,9 @@ class Part extends Model
         'outline_id',
         'name'
     ];
+
+    public function outlines()
+    {
+        return $this->belongsTo(Outline::class, 'outline_id', 'id');
+    }
 }

@@ -23,7 +23,8 @@ class CreateModulesTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->string('price');
             $table->text('thumbnail')->nullable();
-            $table->boolean('status');
+            $table->tinyInteger('status');
+            $table->tinyInteger('progress')->default(0);
             $table->timestamps();
         });
     }

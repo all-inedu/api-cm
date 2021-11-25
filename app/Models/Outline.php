@@ -9,6 +9,8 @@ class Outline extends Model
 {
     use HasFactory;
 
+    protected $table = 'outlines';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,4 +22,19 @@ class Outline extends Model
         'name',
         'desc'
     ];
+
+    public function modules()
+    {
+        return $this->belongsTo(Module::class, 'module_id', 'id');
+    }
+
+    public function sections()
+    {
+        return $this->belongsTo(Section::class, 'section_id', 'id');
+    }
+
+    public function parts()
+    {
+        return $this->hasMany(Part::class, 'outline_id', 'id');
+    }
 }

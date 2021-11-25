@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
+use PhpParser\Node\Stmt\Switch_;
+use App\Models\Outline;
+use App\Models\Part;
 
 use function PHPSTORM_META\type;
 
@@ -22,6 +25,59 @@ class ModuleController extends Controller
     public function __construct() {
 
         $this->paginationModule = RouteServiceProvider::PAGINATION_PAGE_MODULE;
+    }
+
+    public function getDataModule(Request $request)
+    {
+        $outline = $module = $part = "";
+        $module_id  = $request->module_id;
+        $outline_id = $request->outline_id;
+        $part_id    = $request->part_id;
+
+        //** VALIDATION **/
+        $unvalidated_data = array(
+            'module_id'  => $module_id,
+            'outline_id' => $outline_id,
+            'part_id'    => $part_id
+        );
+
+        $rules = array(
+            'module_id' => 'exists:modules,id',
+        );
+
+        if (($outline_id != null) || ($outline_id != 0)) {
+            $rules['outline_id'] = 'exists:outlines,id';
+
+            $outline = Outline::with('sections')
+                        ->where('outlines.id', $outline_id)
+                        ->orderBy('outlines.created_at', 'DESC')->get();
+            $data['data_outline'] = $outline;
+        }
+
+        if (($part_id != null) || ($part_id != 0)) {
+            $rules['part_id'] = 'exists:parts,id';
+            
+            $part = Part::with('outlines')
+                        ->orderBy('parts.created_at', 'DESC')->get();
+            $data['data_part'] = $part;
+        }
+
+        $validator = Validator::make($unvalidated_data, $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->errors()], 401);
+        }
+
+        //** VALIDATION END **/
+
+        $module = Module::where('modules.id', $module_id)
+                        ->with('categories')
+                        ->with('outlines')
+                        ->orderBy('modules.created_at', 'DESC')->get();
+        
+            
+        $data['data_module'] = $module;
+        return $data;
     }
 
     public function findModuleByName(Request $request)

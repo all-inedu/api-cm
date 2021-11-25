@@ -9,6 +9,8 @@ class Module extends Model
 {
     use HasFactory;
 
+    protected $table = 'modules';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +22,17 @@ class Module extends Model
         'category_id',
         'price',
         'thumbnail',
-        'status'
+        'status',
+        'progress'
     ];
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function outlines()
+    {
+        return $this->hasMany(Outline::class, 'module_id', 'id');
+    }
 }
