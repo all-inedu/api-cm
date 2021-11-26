@@ -24,7 +24,10 @@ class ElementController extends Controller
             'category_element' => 'required|string|max:255',
             'description'      => 'required',
             'video_link'       => 'required|string|max:255',
+            'image_path'       => 'required',
             'question'         => 'required',
+            'order'            => 'required',
+            'group'            => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -38,8 +41,11 @@ class ElementController extends Controller
                 'category_element' => $request->category_element,
                 'description'      => $request->description,
                 'video_link'       => $request->video_link,
+                'image_path'       => $request->image_path,
                 'question'         => $request->question,
-                'total_point'      => 0
+                'total_point'      => 0,
+                'order'            => $request->order,
+                'group'            => $request->group
             ]);
         } catch (QueryException $qe) {
 

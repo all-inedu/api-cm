@@ -167,7 +167,7 @@ class ModuleController extends Controller
                 'desc'        => $request->desc,
                 'category_id' => $request->category_id,
                 'price'       => $request->price,
-                'thumbnail'   => $fileName,
+                'thumbnail'   => 'uploaded_file/'.$fileName,
                 'status'      => $request->status
             ];
 
