@@ -129,8 +129,8 @@ class ModuleController extends Controller
             'module_name' => 'required|string|max:255',
             'desc'        => 'required',
             'category_id' => 'required|numeric|exists:categories,id',
-            'price'       => 'required',
-            'thumbnail'   => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            'price'       => 'required'
+            // 'thumbnail'   => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
         if ($validator->fails()) {
