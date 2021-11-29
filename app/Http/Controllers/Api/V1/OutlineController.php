@@ -56,7 +56,7 @@ class OutlineController extends Controller
 
         try {
             
-            Outline::create([
+            $outline = Outline::create([
                 'module_id'  => $request->get('module_id'),
                 'section_id' => $request->get('section_id'),
                 'name'       => $request->get('name'),
@@ -73,6 +73,6 @@ class OutlineController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Outline has successfully stored'], 201);
+        return response()->json(['success' => true, 'message' => 'Outline has successfully stored', 'data' => compact('outline')], 201);
     }
 }
