@@ -166,7 +166,7 @@ class ModuleController extends Controller
                 'module_name' => $request->module_name,
                 'desc'        => $request->desc,
                 'category_id' => $request->category_id,
-                'price'       => $request->price,
+                'price'       => $request->price == 0 ? 'FREE' : $request->price,
                 'thumbnail'   => $fileName,
                 'status'      => $request->status
             ];
