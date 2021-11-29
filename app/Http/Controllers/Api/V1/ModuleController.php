@@ -117,7 +117,7 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
         }
 
-        $module = $module->where('id', $id);
+        $module = $module->where('id', $id)->get();
         return response()->json(['success' => true, 'data' => $module], 200);
         
     }
