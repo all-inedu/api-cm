@@ -35,7 +35,7 @@ class PartController extends Controller
 
         try {
             
-            Part::create([
+            $part = Part::create([
                 'outline_id' => $request->get('outline_id'),
                 'name'       => $request->get('name'),
                 'created_at' => Carbon::now(),
@@ -52,6 +52,6 @@ class PartController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Part has successfully stored'], 201);
+        return response()->json(['success' => true, 'message' => 'Part has successfully stored', 'data' => compact('part')], 201);
     }
 }
