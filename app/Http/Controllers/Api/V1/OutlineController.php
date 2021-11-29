@@ -35,7 +35,7 @@ class OutlineController extends Controller
         // $collection = collect($outline);
         // $grouped = $collection->groupBy('section_id');
 
-        return response()->json(['success' => true, 'data' => $grouped], 200);
+        return response()->json(['success' => true, 'data' => $outline], 200);
         
     }
     
