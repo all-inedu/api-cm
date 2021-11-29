@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Module;
 use App\Models\Outline;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class OutlineController extends Controller
 {
@@ -30,8 +32,8 @@ class OutlineController extends Controller
 
         $outline = $outline->where('module_id', $module_id)->get();
 
-        $collection = collect($outline);
-        $grouped = $collection->groupBy('section_id');
+        // $collection = collect($outline);
+        // $grouped = $collection->groupBy('section_id');
 
         return response()->json(['success' => true, 'data' => $grouped], 200);
         
@@ -41,9 +43,14 @@ class OutlineController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'module_id'  => 'required|numeric|exists:modules,id',
-            'section_id' => 'required|numeric|exists:sections,id',
-            'name'       => 'required|string|max:255',
-            'desc'       => 'required'
+            'section_id' => ['required', 'numeric', 'exists:sections,id',
+                        Rule::unique('outlines')->where(function ($query) use ($request) {
+                            return $query->where('module_id', $request->module_id)
+                            ->where('section_id', $request->section_id);
+                        })        
+            ],
+            'name'       => 'required|string|max:255'
+            // 'desc'       => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -57,10 +64,10 @@ class OutlineController extends Controller
         try {
             
             $outline = Outline::create([
-                'module_id'  => $request->get('module_id'),
-                'section_id' => $request->get('section_id'),
-                'name'       => $request->get('name'),
-                'desc'       => $request->get('desc')
+                'module_id'  => $request->module_id,
+                'section_id' => $request->section_id,
+                'name'       => $request->name,
+                'desc'       => isset($request->desc) ? $request->desc : ''
             ]);
         } catch (QueryException $qe) {
 

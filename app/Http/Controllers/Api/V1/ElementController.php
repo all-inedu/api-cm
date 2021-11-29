@@ -30,6 +30,7 @@ class ElementController extends Controller
         }
 
         try {
+
             
             $requestData = $request->data;
             foreach ($requestData as $data) 
@@ -66,8 +67,7 @@ class ElementController extends Controller
                             'group'            => $request->group,
                             'details_data'     => array(
                                         'answerInArray' => $data->answer,
-                                        'correctAnswer' => $data->correct_answer,
-                                        'question'      => $data->value
+                                        'correctAnswer' => $data->correct_answer
                                         )
                         );
                         $this->storeMultipleChoice($postData);
