@@ -14,8 +14,6 @@ class CreateInsertTElementSp extends Migration
     public function up()
     {
         $store_procedure = "
-
-
                 DROP PROCEDURE IF EXISTS `insert_t_element`;
                 CREATE PROCEDURE `insert_t_element` (
                     IN in_part_id bigint,

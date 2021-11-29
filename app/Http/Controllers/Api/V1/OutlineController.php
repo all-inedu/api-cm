@@ -54,12 +54,22 @@ class OutlineController extends Controller
         ]);
 
         if ($validator->fails()) {
+
+            if (Outline::where('module_id', $request->module_id)->where('section_id', $request->section_id)->exists()) {
+                $outline = Outline::updateOrCreate(
+                    ['module_id' => $request->module_id, 'section_id' => $request->section_id],
+                    ['name' => $request->name]
+                );
+    
+                return response()->json(['success' => true, 'message' => 'Outline has successfully updated', 'data' => compact('outline')], 201);
+            }
+
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
-        if (Outline::where('name', $request->get('name'))->exists()) {
-            return response()->json(['success' => false, 'error' => 'Outline name already exists.']);
-        }
+        // if (Outline::where('name', $request->get('name'))->exists()) {
+        //     return response()->json(['success' => false, 'error' => 'Outline name already exists.']);
+        // }
 
         try {
             

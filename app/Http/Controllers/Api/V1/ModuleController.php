@@ -141,6 +141,17 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Module name already exists.']);
         }
 
+        if (!empty($request->module_id)) {
+            $module              = Module::find($request->module_id);
+            $module->module_name = $request->module_name;
+            $module->desc        = $request->desc;
+            $module->category_id = $request->category_id;
+            $module->price       = $request->price;
+            $module->save();
+
+            return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => compact('module')], 201);
+        }
+
         $file = $fileName = $destinationPath = null;
 
         try {
@@ -166,7 +177,7 @@ class ModuleController extends Controller
                 'module_name' => $request->module_name,
                 'desc'        => $request->desc,
                 'category_id' => $request->category_id,
-                'price'       => $request->price == 0 ? 'FREE' : $request->price,
+                'price'       => $request->price,
                 'thumbnail'   => $fileName,
                 'status'      => $request->status
             ];
