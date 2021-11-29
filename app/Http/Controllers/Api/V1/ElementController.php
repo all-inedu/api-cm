@@ -20,14 +20,8 @@ class ElementController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'part_id'          => 'required|numeric|exists:parts,id',
-            'category_element' => 'required|string|max:255',
-            'description'      => 'required',
-            'video_link'       => 'required|string|max:255',
-            'image_path'       => 'required',
-            'question'         => 'required',
-            'order'            => 'required',
-            'group'            => 'required'
+            'part_id' => 'required|numeric|exists:parts,id',
+            'data'    => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -36,6 +30,41 @@ class ElementController extends Controller
 
         try {
             
+            $requestData = $request->data;
+            foreach ($requestData as $data) {
+                $category = $data->c_element; 
+
+                switch ($category) {
+                    case "image":
+                        $this->storeImage();
+                        break;
+
+                    case "video":
+                        $this->storeVideo();
+                        break;
+
+                    case "text":
+                        $this->storeText();
+                        break;
+
+                    case "file":
+                        $this->storeFile();
+                        break;
+
+                    case "multiple":
+                        $answerInArray = $data->answer;
+                        $correctAnswer = $data->correct_answer;
+                        $question = $data->value;
+                        $this->storeMultipleChoice($answerInArray, $correctAnswer, $question);
+                        break;
+
+                    case "blank":
+                        $this->storeFillInTheBlank();
+                        break;
+                }
+                
+            }
+
             Element::create([
                 'part_id'          => $request->part_id,
                 'category_element' => $request->category_element,
@@ -59,5 +88,39 @@ class ElementController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
+    }
+
+    private function storeImage()
+    {
+
+    }
+
+    private function storeVideo()
+    {
+
+    }
+
+    private function storeText()
+    {
+
+    }
+
+    private function storeFile()
+    {
+
+    }
+
+    private function storeMultipleChoice($answerInArray, $correctAnswer, $question)
+    {
+        if (is_array($answerInArray)) {
+            
+        }
+
+        return false;
+    }
+
+    private function storeFillInTheBlank()
+    {
+
     }
 }

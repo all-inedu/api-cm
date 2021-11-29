@@ -172,7 +172,7 @@ class ModuleController extends Controller
             ];
 
             //* USED *//
-            Module::create($array);
+            $module = Module::create($array);
 
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -183,7 +183,7 @@ class ModuleController extends Controller
             Log::error($e->getMessage());
         }
 
-        return response()->json(['success' => true, 'message' => 'Module has successfully stored'], 201);
+        return response()->json(['success' => true, 'message' => 'Module has successfully stored', 'data' => compact('module')], 201);
     }
     
 }
