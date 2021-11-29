@@ -117,7 +117,7 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
         }
 
-        $module = $module->where('id', $id)->paginate($this->paginationModule);
+        $module = $module->where('id', $id);
         return response()->json(['success' => true, 'data' => $module], 200);
         
     }
@@ -141,7 +141,7 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Module name already exists.']);
         }
 
-        $file = $fileName = $destinationPath = '';
+        $file = $fileName = $destinationPath = null;
 
         try {
             
@@ -157,7 +157,7 @@ class ModuleController extends Controller
             if($file = $request->hasFile('thumbnail')) {
              
                 $file = $request->file('thumbnail') ;
-                $fileName = $file->getClientOriginalName() ;
+                $fileName = 'uploaded_file/'.$file->getClientOriginalName() ;
                 $destinationPath = public_path().'/uploaded_file' ;
                 $file->move($destinationPath,$fileName);
             }
@@ -167,7 +167,7 @@ class ModuleController extends Controller
                 'desc'        => $request->desc,
                 'category_id' => $request->category_id,
                 'price'       => $request->price,
-                'thumbnail'   => 'uploaded_file/'.$fileName,
+                'thumbnail'   => $fileName,
                 'status'      => $request->status
             ];
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
 use Exception;
 use App\Models\Element;
+use App\Models\ElementDetail;
 use Illuminate\Support\Facades\Log;
 
 class ElementController extends Controller
@@ -31,9 +32,10 @@ class ElementController extends Controller
         try {
             
             $requestData = $request->data;
-            foreach ($requestData as $data) {
-                $category = $data->c_element; 
+            foreach ($requestData as $data) 
+            {
 
+                $category = $data->c_element;                
                 switch ($category) {
                     case "image":
                         $this->storeImage();
@@ -52,10 +54,23 @@ class ElementController extends Controller
                         break;
 
                     case "multiple":
-                        $answerInArray = $data->answer;
-                        $correctAnswer = $data->correct_answer;
-                        $question = $data->value;
-                        $this->storeMultipleChoice($answerInArray, $correctAnswer, $question);
+                        $postData = array(
+                            'part_id'          => $request->part_id,
+                            'category_element' => $request->category_element,
+                            'description'      => $request->description,
+                            'video_link'       => null,
+                            'image_path'       => null,
+                            'question'         => null,
+                            'total_point'      => 0,
+                            'order'            => $request->order,
+                            'group'            => $request->group,
+                            'details_data'     => array(
+                                        'answerInArray' => $data->answer,
+                                        'correctAnswer' => $data->correct_answer,
+                                        'question'      => $data->value
+                                        )
+                        );
+                        $this->storeMultipleChoice($postData);
                         break;
 
                     case "blank":
@@ -65,17 +80,7 @@ class ElementController extends Controller
                 
             }
 
-            Element::create([
-                'part_id'          => $request->part_id,
-                'category_element' => $request->category_element,
-                'description'      => $request->description,
-                'video_link'       => $request->video_link,
-                'image_path'       => $request->image_path,
-                'question'         => $request->question,
-                'total_point'      => 0,
-                'order'            => $request->order,
-                'group'            => $request->group
-            ]);
+            
         } catch (QueryException $qe) {
 
             Log::error($qe->getMessage());
@@ -110,10 +115,33 @@ class ElementController extends Controller
 
     }
 
-    private function storeMultipleChoice($answerInArray, $correctAnswer, $question)
+    private function storeMultipleChoice($postData)
     {
+
+        $element = Element::create([
+            'part_id'          => $postData->part_id,
+            'category_element' => $postData->category_element,
+            'description'      => $postData->description,
+            'video_link'       => $postData->video_link,
+            'image_path'       => $postData->image_path,
+            'question'         => $postData->question,
+            'total_point'      => 0,
+            'order'            => $postData->order,
+            'group'            => $postData->group
+        ]);
+        $element_id = $element->id();
+
+        $answerInArray = $postData->details_data->answerInArray;
+        $correctAnswer = $postData->correct_answer;
         if (is_array($answerInArray)) {
-            
+            for ($i = 0 ; $i < count($answerInArray) ; $i++)
+            {
+                ElementDetail::create([
+                    'element_id' => $element_id,
+                    'answer' => $answerInArray[$i],
+                    'value' => $correctAnswer == $i ? 1 : 0
+                ]);
+            }
         }
 
         return false;

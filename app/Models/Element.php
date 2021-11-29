@@ -30,4 +30,9 @@ class Element extends Model
     {
         return $this->belongsTo(Part::class, 'part_id', 'id');
     }
+
+    public function elementdetails()
+    {
+        return $this->hasMany(ElementDetail::class, 'element_id', 'id');
+    }
 }
