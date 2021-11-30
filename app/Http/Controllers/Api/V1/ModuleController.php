@@ -142,29 +142,17 @@ class ModuleController extends Controller
         }
 
         if (!empty($request->module_id)) {
-            $module              = Module::find($request->module_id);
-            $module->module_name = $request->module_name;
-            $module->desc        = $request->desc;
-            $module->category_id = $request->category_id;
-            $module->price       = $request->price;
-            $module->save();
-
-            return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => compact('module')], 201);
+            $update_process = $this->update($request);
+            if ($update_process)
+                return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => compact('module')], 201);
+            else
+                return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         }
 
         $file = $fileName = $destinationPath = null;
 
         try {
-            
-            //* UNUSED *//
-            // DB::table("CALL insert_module(
-            //     '".$request->get('module_name')."',
-            //     '".str_replace("'", "\'", $request->get('desc'))."',
-            //     '".$request->get('category')."',
-            //     '".$request->get('price')."',
-            //     '".$request->get('status')."'
-            // )");
-
+        
             if($file = $request->hasFile('thumbnail')) {
              
                 $file = $request->file('thumbnail') ;
@@ -179,7 +167,8 @@ class ModuleController extends Controller
                 'category_id' => $request->category_id,
                 'price'       => $request->price,
                 'thumbnail'   => $fileName,
-                'status'      => $request->status
+                'status'      => $request->status,
+                'progress'    => 2
             ];
 
             //* USED *//
@@ -189,12 +178,48 @@ class ModuleController extends Controller
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
 
-            Log::error($e->getMessage());
         }
 
         return response()->json(['success' => true, 'message' => 'Module has successfully stored', 'data' => compact('module')], 201);
+    }
+
+    public function update($module_data)
+    {
+        $module              = Module::find($module_data->module_id);
+        $module->module_name = $module_data->module_name;
+        $module->desc        = $module_data->desc;
+        $module->category_id = $module_data->category_id;
+        $module->price       = $module_data->price;
+
+        $file = $fileName = $destinationPath = null;
+
+        if($file = $module_data->hasFile('thumbnail')) {
+             
+            $file = $module_data->file('thumbnail') ;
+            $fileName = 'uploaded_file/'.$file->getClientOriginalName() ;
+            $destinationPath = public_path().'/uploaded_file' ;
+            $file->move($destinationPath,$fileName);
+            $module->thumbnail = $fileName;
+        }
+
+        try {
+
+            $module->save();
+
+        } catch (QueryException $e) {
+            
+            Log::error($e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            
+            Log::error($e->getMessage());
+            return false;
+        }
+
+        return true;
     }
     
 }
