@@ -77,7 +77,7 @@ class OutlineController extends Controller
                 'desc'       => isset($request->desc) ? $request->desc : ''
             ]);
 
-            $module = Module::find($request->module_id);
+            $module = Module::findOrFail($request->module_id);
             $module->progress = 3;
             $module->save();
             

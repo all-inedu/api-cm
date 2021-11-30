@@ -205,7 +205,7 @@ class ModuleController extends Controller
         
         try {
 
-            $module = Module::find($module_id);
+            $module = Module::findOrFail($module_id);
             $module->thumbnail = $fileName;
             $module->save();
 
@@ -223,7 +223,7 @@ class ModuleController extends Controller
     {
         DB::beginTransaction();
         try {
-            $module              = Module::find($module_data->module_id);
+            $module              = Module::findOrFail($module_data->module_id);
             $old_thumbnail       = $module->thumbnail;
             $module->module_name = $module_data->module_name;
             $module->desc        = $module_data->desc;
@@ -252,7 +252,7 @@ class ModuleController extends Controller
                 
                 $file->move($destinationPath,$fileName);
 
-                $module = Module::find($module_data->module_id);
+                $module = Module::findOrFail($module_data->module_id);
                 $module->thumbnail = $fileName;
                 $module->save();
             }
