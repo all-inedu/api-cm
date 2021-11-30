@@ -137,9 +137,9 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
-        // if (Module::where('module_name', $request->get('module_name'))->exists()) {
-        //     return response()->json(['success' => false, 'error' => 'Module name already exists.']);
-        // }
+        if (Module::where('module_name', $request->get('module_name'))->exists()) {
+            return response()->json(['success' => false, 'error' => 'Module name already exists.']);
+        }
 
         if (!empty($request->module_id)) {
             $update_process = $this->update($request);
@@ -151,28 +151,22 @@ class ModuleController extends Controller
 
         $file = $fileName = $destinationPath = null;
 
+        //!INSERT CODE
         try {
-        
-            if($file = $request->hasFile('thumbnail')) {
-             
-                $file = $request->file('thumbnail') ;
-                $fileName = 'uploaded_file/'.$file->getClientOriginalName() ;
-                $destinationPath = public_path().'/uploaded_file' ;
-                $file->move($destinationPath,$fileName);
-            }
 
             $array = [
                 'module_name' => $request->module_name,
                 'desc'        => $request->desc,
                 'category_id' => $request->category_id,
                 'price'       => $request->price,
-                'thumbnail'   => $fileName,
+                'thumbnail'   => null,
                 'status'      => $request->status,
                 'progress'    => 2
             ];
 
             //* USED *//
             $module = Module::create($array);
+            $module_id = $module->id;
 
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -182,6 +176,20 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
 
         }
+        
+        //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
+        if($file = $request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail') ;
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+            $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+            $file->move($destinationPath,$fileName);
+        }
+        
+        //! IF UPLOAD WAS SUCCESS THEN DO UPDATE TO SAVE THUMBNAIL PATH
+        $module = Module::find($module_id);
+        $module->thumbnail = $fileName;
+        $module->save();
 
         return response()->json(['success' => true, 'message' => 'Module has successfully stored', 'data' => compact('module')], 201);
     }
@@ -197,10 +205,10 @@ class ModuleController extends Controller
         $file = $fileName = $destinationPath = null;
 
         if($file = $module_data->hasFile('thumbnail')) {
-             
-            $file = $module_data->file('thumbnail') ;
-            $fileName = 'uploaded_file/'.$file->getClientOriginalName() ;
-            $destinationPath = public_path().'/uploaded_file' ;
+            $file = $module_data->file('thumbnail');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'uploaded_file/module/'.$module_data->module_id.'/'.date('dmYHis').".".$extension ;
+            $destinationPath = public_path().'/uploaded_file/module/'.$module_data->module_id.'/';
             $file->move($destinationPath,$fileName);
             $module->thumbnail = $fileName;
         }
