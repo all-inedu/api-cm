@@ -10,6 +10,7 @@ use Exception;
 use App\Models\Element;
 use App\Models\ElementDetail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ElementController extends Controller
 {
@@ -117,6 +118,13 @@ class ElementController extends Controller
 
     private function storeMultipleChoice($postData)
     {
+        DB::beginTransaction();
+
+        try {
+
+        } catch (Exception $e) {
+
+        }
 
         $element = Element::create([
             'part_id'          => $postData->part_id,
