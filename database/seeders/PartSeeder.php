@@ -17,11 +17,11 @@ class PartSeeder extends Seeder
         $data = array(
             array(
                 'outline_id' => 1,
-                'name' => 'This is Part A'
+                'title' => 'This is Part A'
             ),
             array(
                 'outline_id' => 2,
-                'name' => 'This is Part B'
+                'title' => 'This is Part B'
             )
         );
 

@@ -21,7 +21,7 @@ class CreateModulesTable extends Migration
             //! TODO - add foreign key to 'roles'
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('price');
+            $table->bigInteger('price');
             $table->text('thumbnail')->nullable();
             $table->tinyInteger('status');
             $table->tinyInteger('progress')->default(0);

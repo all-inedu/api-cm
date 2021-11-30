@@ -19,7 +19,7 @@ class CreatePartsTable extends Migration
             $table->unsignedBigInteger('outline_id');
             $table->foreign('outline_id')->references('id')->on('outlines')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->string('name');
+            $table->string('title');
             $table->timestamps();
         });
     }

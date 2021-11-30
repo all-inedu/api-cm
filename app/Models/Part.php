@@ -16,7 +16,7 @@ class Part extends Model
      */
     protected $fillable = [
         'outline_id',
-        'name'
+        'title'
     ];
 
     public function outlines()

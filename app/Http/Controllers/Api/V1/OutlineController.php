@@ -53,8 +53,8 @@ class OutlineController extends Controller
             // 'desc'       => 'required'
         ]);
 
-        if ($validator->fails()) {
-
+        if ($validator->fails()) 
+        {
             if (Outline::where('module_id', $request->module_id)->where('section_id', $request->section_id)->exists()) {
 
                 $updated_data = $this->update($request); 
