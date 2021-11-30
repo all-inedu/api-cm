@@ -56,12 +56,9 @@ class OutlineController extends Controller
         if ($validator->fails()) {
 
             if (Outline::where('module_id', $request->module_id)->where('section_id', $request->section_id)->exists()) {
-                $outline = Outline::updateOrCreate(
-                    ['module_id' => $request->module_id, 'section_id' => $request->section_id],
-                    ['name' => $request->name]
-                );
-    
-                return response()->json(['success' => true, 'message' => 'Outline has successfully updated', 'data' => compact('outline')], 201);
+
+                $updated_data = $this->update($request); 
+                return response()->json(['success' => true, 'message' => 'Outline has successfully updated', 'data' => $updated_data], 201);
             }
 
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
@@ -96,5 +93,28 @@ class OutlineController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Outline has successfully stored', 'data' => compact('outline')], 201);
+    }
+
+    public function update($outline_data)
+    {
+        try {
+            
+            $outline = Outline::updateOrCreate(
+                ['module_id' => $outline_data->module_id, 'section_id' => $outline_data->section_id],
+                ['name' => $outline_data->name]
+            );
+
+        } catch (QueryException $e) {
+
+            Log::error($e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+
+            Log::error($e->getMessage());
+            return false;
+        }
+
+        return compact('outline');
     }
 }
