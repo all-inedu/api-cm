@@ -137,14 +137,14 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
-        if (Module::where('module_name', $request->get('module_name'))->exists()) {
-            return response()->json(['success' => false, 'error' => 'Module name already exists.']);
-        }
+        // if (Module::where('module_name', $request->get('module_name'))->exists()) {
+        //     return response()->json(['success' => false, 'error' => 'Module name already exists.']);
+        // }
 
         if (!empty($request->module_id)) {
             $update_process = $this->update($request);
             if ($update_process)
-                return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => compact('module')], 201);
+                return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => $update_process], 201);
             else
                 return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         }
@@ -219,7 +219,7 @@ class ModuleController extends Controller
             return false;
         }
 
-        return true;
+        return compact('module');
     }
     
 }
