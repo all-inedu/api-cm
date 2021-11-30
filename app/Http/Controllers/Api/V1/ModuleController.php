@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use PhpParser\Node\Stmt\Switch_;
 use App\Models\Outline;
 use App\Models\Part;
+use Illuminate\Support\Facades\File;
 
 use function PHPSTORM_META\type;
 
@@ -139,10 +140,10 @@ class ModuleController extends Controller
 
         if (!empty($request->module_id)) {
             $updated = $this->update($request);
-            if ($updated)
-                return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => $updated], 201);
+            if ($updated['status_code'] == 201)
+                return response()->json(['success' => true, 'message' => 'Module has successfully updated', 'data' => $updated['message']], 201);
             else
-                return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
+                return response()->json(['success' => false, 'error' => $updated['message']], 400);
         }
 
         if (Module::where('module_name', $request->module_name)->exists()) {
@@ -190,7 +191,6 @@ class ModuleController extends Controller
 
             try {
                 if (file_exists(public_path($fileName))) {
-                    Log::error("File : ".$fileName." is exists");
                     throw new Exception('Can\'t use same name. Filename already exists');
                 }
             } catch (Exception $e) {
@@ -221,39 +221,65 @@ class ModuleController extends Controller
 
     public function update($module_data)
     {
-
-        $module              = Module::find($module_data->module_id);
-        $module->module_name = $module_data->module_name;
-        $module->desc        = $module_data->desc;
-        $module->category_id = $module_data->category_id;
-        $module->price       = $module_data->price;
-
-        $file = $fileName = $destinationPath = null;
-
-        if($file = $module_data->hasFile('thumbnail')) {
-            $file = $module_data->file('thumbnail');
-            $extension = $file->getClientOriginalExtension();
-            $fileName = 'uploaded_file/module/'.$module_data->module_id.'/'.date('dmYHis').".".$extension ;
-            $destinationPath = public_path().'/uploaded_file/module/'.$module_data->module_id.'/';
-            $file->move($destinationPath,$fileName);
-            $module->thumbnail = $fileName;
-        }
-
+        DB::beginTransaction();
         try {
-
+            $module              = Module::find($module_data->module_id);
+            $old_thumbnail       = $module->thumbnail;
+            $module->module_name = $module_data->module_name;
+            $module->desc        = $module_data->desc;
+            $module->category_id = $module_data->category_id;
+            $module->price       = $module_data->price;
             $module->save();
+    
+            $file = $fileName = $destinationPath = null;
+    
+            if($file = $module_data->hasFile('thumbnail')) 
+            {
+                $file = $module_data->file('thumbnail') ;
+                $extension = $file->getClientOriginalExtension();
+                $fileName = 'uploaded_file/module/'.$module_data->module_id.'/'.date('dmYHis').".".$extension ;
+                $destinationPath = public_path().'/uploaded_file/module/'.$module_data->module_id.'/';
 
+                //! CHECKING IF THERE'S A FILE INI THE DIRECTORY WITH $fileName
+                if (file_exists(public_path($fileName))) {
+                    throw new Exception('Can\'t use same name. Filename already exists');
+                }
+
+                //! CHECKING IF OLD FILE WAS THERE ON THE DIRECTORY AND NEED TO BE DELETED
+                if (file_exists(public_path($old_thumbnail))) {
+                    File::delete($old_thumbnail);
+                }
+                
+                $file->move($destinationPath,$fileName);
+
+                $module = Module::find($module_data->module_id);
+                $module->thumbnail = $fileName;
+                $module->save();
+            }
+            DB::commit();
+        
         } catch (QueryException $e) {
-            
+
+            DB::rollBack();
             Log::error($e->getMessage());
-            return false;
+            return array(
+                'status_code' => 400,
+                'message' => $e->getMessage()
+            );
+
         } catch (Exception $e) {
-            
+            DB::rollBack();
             Log::error($e->getMessage());
-            return false;
+            return array(
+                'status_code' => 400,
+                'message' => $e->getMessage()
+            );
         }
 
-        return compact('module');
+        return array(
+            'status_code' => 201,
+            'message' => compact('module')
+        );
     }
     
 }

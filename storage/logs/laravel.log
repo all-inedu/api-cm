@@ -8221,3 +8221,10 @@ Did you mean one of these?
 [2021-11-30 06:56:14] local.ERROR: File : uploaded_file/1.PNG is exists  
 [2021-11-30 07:01:19] local.ERROR: File : uploaded_file/1.PNG is exists  
 [2021-11-30 07:05:13] local.ERROR: File : uploaded_file/1.PNG is exists  
+[2021-11-30 07:26:40] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:28:17] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:30:35] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:33:19] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:35:35] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:35:41] local.ERROR: Can't use same name. Filename already exists  
+[2021-11-30 07:37:56] local.ERROR: Can't use same name. Filename already exists  
