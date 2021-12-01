@@ -62,7 +62,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('outline/{module_id?}', [OutlineController::class, 'getListOutlineByModule']);
         Route::post('outline', [OutlineController::class, 'store']);
 
-        Route::post('delete/part', [PartController::class, 'delete']);
+        Route::delete('delete/part/{part_id}', [PartController::class, 'delete']);
         Route::get('part/{outline_id?}', [PartController::class, 'list']);
         // Route::get('part/all', [PartController::class, 'list']);
         Route::post('part', [PartController::class, 'store']);

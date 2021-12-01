@@ -101,13 +101,6 @@ class PartController extends Controller
     public function delete (Request $request)
     {
         $part_id = $request->part_id;
-        $validator = Validator::make($request->all(), [
-            'part_id' => 'required|numeric'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'error' => $validator->errors()], 401);
-        }
 
         try {
 
@@ -123,6 +116,6 @@ class PartController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
         
-        return response()->json(['success' => true, 'message' => 'Part : '.$part_name.' has successfully deleted'], 200);
+        return response()->json(['success' => true, 'message' => 'Part : "'.$part_name.'" has successfully deleted'], 200);
     }
 }
