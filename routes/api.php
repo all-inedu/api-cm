@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\VerificationController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ElementController;
+use App\Models\Module;
 use App\Models\Outline;
 
 /*
@@ -55,6 +56,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('module/{id?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
         Route::post('find/module', [ModuleController::class, 'findModuleByName']);
+        Route::post('find/module/status', [ModuleController::class, 'findModuleByStatus']);
 
         Route::get('category/all', [CategoryController::class, 'list']);
 

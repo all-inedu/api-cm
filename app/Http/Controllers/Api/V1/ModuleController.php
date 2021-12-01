@@ -81,6 +81,20 @@ class ModuleController extends Controller
         return $data;
     }
 
+    public function findModuleByStatus (Request $request)
+    {
+        $status = $request->status;
+        $module = DB::table('modules')
+                    ->select('modules.*', 'categories.name as category_name')
+                    ->join('categories', 'categories.id', '=', 'modules.category_id')
+                    ->where('modules.status', $status)
+                    ->paginate($this->paginationModule);
+        $drafted_module   = Module::where('status', 0)->count();  //! 0 = Draft
+        $published_module = Module::where('status', 1)->count();  //! 1 = Published
+        $inactive_module  = Module::where('status', 2)->count();   //! 2 = Inactive
+        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')], 200);
+    }
+
     public function findModuleByName(Request $request)
     {
         $drafted_module = $published_module = $inactive_module = 0;
@@ -125,10 +139,10 @@ class ModuleController extends Controller
 
         if ($id == null) {
 
+            $module = $module->paginate($this->paginationModule);
             $drafted_module   = Module::where('status', 0)->count();  //! 0 = Draft
             $published_module = Module::where('status', 1)->count();  //! 1 = Published
             $inactive_module  = Module::where('status', 2)->count();   //! 2 = Inactive
-            $module = $module->paginate($this->paginationModule);
             return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')], 200);
         }
 
