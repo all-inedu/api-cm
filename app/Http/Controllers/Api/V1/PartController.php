@@ -101,6 +101,14 @@ class PartController extends Controller
     public function delete (Request $request)
     {
         $part_id = $request->part_id;
+        $validator = Validator::make($request->all(), [
+            'part_id' => 'required|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->errors()], 401);
+        }
+
         try {
 
             $part = Part::findOrFail($part_id);
