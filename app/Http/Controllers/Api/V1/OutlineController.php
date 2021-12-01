@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Module;
 use App\Models\Outline;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
@@ -15,6 +16,13 @@ use Illuminate\Validation\Rule;
 
 class OutlineController extends Controller
 {
+
+    public function getOutlineDetailById (Request $request)
+    {
+        $outline_id = $request->outline_id;
+        $outline = Outline::findOrFail($outline_id);
+        return compact('outline');
+    }
 
     public function getListOutlineByModule(Request $request)
     {
@@ -68,27 +76,34 @@ class OutlineController extends Controller
         //     return response()->json(['success' => false, 'error' => 'Outline name already exists.']);
         // }
 
+        DB::beginTransaction();
+
         try {
             
             $outline = Outline::create([
                 'module_id'  => $request->module_id,
                 'section_id' => $request->section_id,
                 'name'       => $request->name,
-                'desc'       => isset($request->desc) ? $request->desc : ''
+                'desc'       => isset($request->desc) ? $request->desc : '',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]);
 
             $module = Module::findOrFail($request->module_id);
             $module->progress = 3;
             $module->save();
+
+            DB::commit();
             
         } catch (QueryException $qe) {
 
+            DB::rollBack();
             Log::error($qe->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         } catch (Exception $e) {
-            
-            Log::error($e->getMessage());
 
+            DB::rollBack();
+            Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
