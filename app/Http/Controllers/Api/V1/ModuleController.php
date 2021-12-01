@@ -83,7 +83,8 @@ class ModuleController extends Controller
 
     public function findModuleByName(Request $request)
     {
-        $keyword = $request->get('keyword');
+        $keyword = $request->keyword;
+        echo $keyword;exit;
         $module = DB::table('modules');
 
         if ($keyword != "") {
@@ -120,7 +121,7 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
         }
 
-        $module = $module->where('id', $id)->get();
+        $module = $module->where('modules.id', $id)->get();
         return response()->json(['success' => true, 'data' => $module], 200);
         
     }

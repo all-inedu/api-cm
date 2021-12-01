@@ -54,7 +54,7 @@ Route::group(['prefix' => 'v1'], function() {
         //* Module *//
         Route::get('module/{id?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
-        Route::get('find/module/{keyword?}', [ModuleController::class, 'findModuleByName']);
+        Route::post('find/module', [ModuleController::class, 'findModuleByName']);
 
         Route::get('category/all', [CategoryController::class, 'list']);
 
