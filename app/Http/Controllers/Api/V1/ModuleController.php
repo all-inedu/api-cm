@@ -105,7 +105,9 @@ class ModuleController extends Controller
     {
         $id = $request->id;
 
-        $module = DB::table('modules');
+        $module = DB::table('modules')
+                    ->select('modules.*', 'categories.name as category_name')
+                    ->join('categories', 'categories.id', '=', 'modules.category_id');
 
         if ($id == null) {
 
