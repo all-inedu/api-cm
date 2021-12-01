@@ -84,7 +84,6 @@ class ModuleController extends Controller
     public function findModuleByName(Request $request)
     {
         $keyword = $request->keyword;
-        echo $keyword;exit;
         $module = DB::table('modules');
 
         if ($keyword != "") {
