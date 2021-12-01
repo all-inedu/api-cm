@@ -116,6 +116,6 @@ class PartController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
         
-        return response()->json(['success' => true, 'message' => 'Part : "'.$part_name.'" has successfully deleted'], 200);
+        return response()->json(['success' => true, 'message' => 'Part : '.$part_name.' has successfully deleted'], 200);
     }
 }
