@@ -90,8 +90,12 @@ class OutlineController extends Controller
             ]);
 
             $module = Module::findOrFail($request->module_id);
-            $module->progress = 2;
-            $module->save();
+            $module_progress = $module->progress;
+
+            if ($module_progress < 3) {
+                $module->progress = 2;
+                $module->save();
+            }
 
             DB::commit();
             
