@@ -111,7 +111,7 @@ class OutlineController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Outline has successfully stored', 'data' => compact('outline')], 201);
+        return response()->json(['success' => true, 'message' => 'Outline has successfully stored', 'data' => compact('outline', 'module_progress')], 201);
     }
 
     public function update($outline_data)
