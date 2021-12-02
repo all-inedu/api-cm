@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Models\Module;
+use Illuminate\Support\Facades\DB;
 
 class PartController extends Controller
 {
@@ -33,9 +35,12 @@ class PartController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'module_id'  => 'required|numeric|exists:modules,id',
             'outline_id' => 'required|numeric|exists:outlines,id',
             'title'      => 'required'
         ]);
+
+        $module_id = $request->module_id;
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
@@ -53,6 +58,8 @@ class PartController extends Controller
                 return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         }
 
+        DB::beginTransaction();
+
         try {
             
             $part = Part::create([
@@ -61,12 +68,22 @@ class PartController extends Controller
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]);
-        } catch (QueryException $qe) {
 
+            //! CHECKING PROGRESS STATUS
+            $module = Module::findOrFail($module_id);
+            $progress = $module->progress;
+            if ($progress < 4) {
+                $module->progress = 3;
+                $module->save();
+            }
+
+            DB::commit();
+        } catch (QueryException $qe) {
+            DB::rollBack();
             Log::error($qe->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         } catch (Exception $e) {
-            
+            DB::rollBack();
             Log::error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
