@@ -93,7 +93,7 @@ class OutlineController extends Controller
             $module_progress = $module->progress;
 
             if ($module_progress < 3) {
-                $module->progress = 2;
+                $module->progress = $module_progress = 2;
                 $module->save();
             }
 
