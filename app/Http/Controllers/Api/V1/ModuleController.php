@@ -214,7 +214,7 @@ class ModuleController extends Controller
                 'category_id' => $request->category_id,
                 'price'       => $request->price,
                 'thumbnail'   => null,
-                'status'      => $request->status,
+                'status'      => 0,
                 'progress'    => 1 //! UPDATE PROGRESS
             ];
 

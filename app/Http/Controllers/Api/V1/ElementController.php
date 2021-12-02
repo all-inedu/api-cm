@@ -31,7 +31,6 @@ class ElementController extends Controller
         }
 
         try {
-
             
             $requestData = $request->data;
             foreach ($requestData as $data) 
@@ -71,7 +70,7 @@ class ElementController extends Controller
                                         'correctAnswer' => $data->correct_answer
                                         )
                         );
-                        $this->storeMultipleChoice($postData);
+                        $response = $this->storeMultipleChoice($postData);
                         break;
 
                     case "blank":
@@ -120,39 +119,52 @@ class ElementController extends Controller
     {
         DB::beginTransaction();
 
+        //! INSERT INTO ELEMENT MASTER
         try {
+            $element = Element::create([
+                'part_id'          => $postData->part_id,
+                'category_element' => $postData->category_element,
+                'description'      => $postData->description,
+                'video_link'       => $postData->video_link,
+                'image_path'       => $postData->image_path,
+                'question'         => $postData->question,
+                'total_point'      => 0,
+                'order'            => $postData->order,
+                'group'            => $postData->group
+            ]);
+
+            $element_id = $element->id();
 
         } catch (Exception $e) {
-
+            DB::rollBack();
+            return array('success' => false, 'error' => $e->getMessage());
         }
 
-        $element = Element::create([
-            'part_id'          => $postData->part_id,
-            'category_element' => $postData->category_element,
-            'description'      => $postData->description,
-            'video_link'       => $postData->video_link,
-            'image_path'       => $postData->image_path,
-            'question'         => $postData->question,
-            'total_point'      => 0,
-            'order'            => $postData->order,
-            'group'            => $postData->group
-        ]);
-        $element_id = $element->id();
+        //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
+        try {
+            $answerInArray = $postData->details_data->answerInArray;
+            $correctAnswer = $postData->correct_answer;
+            if (!is_array($answerInArray)) {
+                throw new Exception('Undefined multiple choice answer');
+            }
 
-        $answerInArray = $postData->details_data->answerInArray;
-        $correctAnswer = $postData->correct_answer;
-        if (is_array($answerInArray)) {
             for ($i = 0 ; $i < count($answerInArray) ; $i++)
             {
-                ElementDetail::create([
+                $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
                     'answer' => $answerInArray[$i],
                     'value' => $correctAnswer == $i ? 1 : 0
                 ]);
             }
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            return array('success' => false, 'error' => $e->getMessage());
         }
 
-        return false;
+        DB::commit();
+
+        return array('success' => true, 'error' => compact('element', 'the_answer'));
     }
 
     private function storeFillInTheBlank()
