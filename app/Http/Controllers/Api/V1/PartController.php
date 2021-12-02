@@ -71,9 +71,10 @@ class PartController extends Controller
 
             //! CHECKING PROGRESS STATUS
             $module = Module::findOrFail($module_id);
-            $progress = $module->progress;
-            if ($progress < 4) {
-                $module->progress = 3;
+            $module_progress = $module->progress;
+
+            if ($module_progress < 4) {
+                $module->progress = $module_progress = 3;
                 $module->save();
             }
 
@@ -89,7 +90,7 @@ class PartController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Part has successfully stored', 'data' => compact('part')], 201);
+        return response()->json(['success' => true, 'message' => 'Part has successfully stored', 'data' => compact('part', 'module_progress')], 201);
     }
 
     public function update($part_data)
