@@ -109,7 +109,7 @@ class ModuleController extends Controller
                     ->where('module_name', 'like', '%'.$keyword.'%');
 
             //! QUERY BY STATUS IF STATUS IS NOT NULL
-            $module = $status ? $module->where('modules.status', $status) : $module;
+            $module = isset($status) ? $module->where('modules.status', $status) : $module;
             $module = $module->paginate($this->paginationModule);
 
             $drafted_module   = Module::where('module_name', 'like', '%'.$keyword.'%')->where('status', 0)->count();  //! 0 = Draft
@@ -119,7 +119,6 @@ class ModuleController extends Controller
             return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')]);
 
         } catch (Exception $e) {
-            echo $e->getMessage();
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         }
@@ -153,7 +152,7 @@ class ModuleController extends Controller
 
         $module = $module->where('modules.id', $id)->get();
 
-        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')], 200);
+        return response()->json(['success' => true, 'data' => $module], 200);
         
     }
     
