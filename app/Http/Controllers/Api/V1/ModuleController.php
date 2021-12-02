@@ -28,6 +28,25 @@ class ModuleController extends Controller
         $this->paginationModule = RouteServiceProvider::PAGINATION_PAGE_MODULE;
     }
 
+    public function deactivateActivate(Request $request, $module_id)
+    {
+        $status = $request->status;
+
+        try 
+        {
+            $module = Module::findOrFail($module_id);
+            $module->status = $status;
+            $module->save();
+        } 
+        catch (Exception $e) 
+        {
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
+        }
+
+        return response()->json(['success' => true, 'data' => $module]);
+    }
+
     public function getDataModule(Request $request)
     {
         $outline = $module = $part = "";
@@ -196,7 +215,7 @@ class ModuleController extends Controller
                 'price'       => $request->price,
                 'thumbnail'   => null,
                 'status'      => $request->status,
-                'progress'    => 2
+                'progress'    => 1 //! UPDATE PROGRESS
             ];
 
 
@@ -217,9 +236,9 @@ class ModuleController extends Controller
         //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
         if($file = $request->hasFile('thumbnail')) 
         {
-            $file = $request->file('thumbnail') ;
-            $extension = $file->getClientOriginalExtension();
-            $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+            $file            = $request->file('thumbnail') ;
+            $extension       = $file->getClientOriginalExtension();
+            $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
             $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
 
             try {

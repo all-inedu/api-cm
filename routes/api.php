@@ -55,6 +55,7 @@ Route::group(['prefix' => 'v1'], function() {
         //* Module *//
         Route::get('module/{id?}', [ModuleController::class, 'list']);
         Route::post('module', [ModuleController::class, 'store']);
+        Route::put('module/{module_id}', [ModuleController::class, 'deactivateActivate']);
         Route::post('find/module', [ModuleController::class, 'findModuleByName']);
         Route::post('find/module/status', [ModuleController::class, 'findModuleByStatus']);
 

@@ -41,16 +41,16 @@ class PartController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
+        if (Part::where('title', $request->get('title'))->exists()) {
+            return response()->json(['success' => false, 'error' => 'Part title already exists.']);
+        }
+
         if (!empty($request->part_id)) {
             $updated = $this->update($request);
             if ($updated)
                 return response()->json(['success' => true, 'message' => 'Part has successfully updated', 'data' => $updated], 201);
             else
                 return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
-        }
-
-        if (Part::where('title', $request->get('title'))->exists()) {
-            return response()->json(['success' => false, 'error' => 'Part title already exists.']);
         }
 
         try {

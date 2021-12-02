@@ -8786,3 +8786,6 @@ Did you mean one of these?
 #49 C:\\xampp\\htdocs\\career-module\\server.php(21): require_once('C:\\\\xampp\\\\htdocs...')
 #50 {main}
 "} 
+[2021-12-02 03:44:34] local.ERROR: No query results for model [App\Models\Module].  
+[2021-12-02 03:48:07] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'status' cannot be null (SQL: update `modules` set `status` = ?, `modules`.`updated_at` = 2021-12-02 03:48:07 where `id` = 1)  
+[2021-12-02 03:53:30] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'status' cannot be null (SQL: update `modules` set `status` = ?, `modules`.`updated_at` = 2021-12-02 03:53:30 where `id` = 1)  
