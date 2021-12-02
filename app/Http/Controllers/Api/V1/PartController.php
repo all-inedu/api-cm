@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\DB;
 
 class PartController extends Controller
 {
+
+    public function getPartDetailById($part_id)
+    {
+        $part = Part::findOrFail($part_id);
+        return compact('part');
+    }
+
     public function list(Request $request)
     {
         $outline_id = $request->outline_id;

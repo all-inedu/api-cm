@@ -21,6 +21,17 @@ class ElementController extends Controller
 
     public function store(Request $request)
     {
+
+        $data = array(
+            'part_id' => 1,
+            'data' => array(
+                'c_element' => 'multiple',
+                'answer_in_array' => array(
+                    'part_id' => 1
+                )
+            )
+        );
+
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
             'data'    => 'required'
@@ -31,7 +42,7 @@ class ElementController extends Controller
         }
 
         try {
-            
+
             $requestData = $request->data;
             foreach ($requestData as $data) 
             {
@@ -66,8 +77,8 @@ class ElementController extends Controller
                             'order'            => $request->order,
                             'group'            => $request->group,
                             'details_data'     => array(
-                                        'answerInArray' => $data->answer,
-                                        'correctAnswer' => $data->correct_answer
+                                        'answer_in_array' => $data->answer,
+                                        'correct_answer' => $data->correct_answer
                                         )
                         );
                         $response = $this->storeMultipleChoice($postData);

@@ -65,6 +65,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('outline/{module_id?}', [OutlineController::class, 'getListOutlineByModule']);
         Route::post('outline', [OutlineController::class, 'store']);
 
+        Route::get('detail/part/{part_id}', [PartController::class, 'getPartDetailById']);
         Route::get('part/{outline_id?}', [PartController::class, 'list']);
         // Route::get('part/all', [PartController::class, 'list']);
         Route::post('part', [PartController::class, 'store']);
