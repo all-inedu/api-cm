@@ -17,9 +17,8 @@ use Illuminate\Validation\Rule;
 class OutlineController extends Controller
 {
 
-    public function getOutlineDetailById (Request $request)
+    public function getOutlineDetailById ($outline_id)
     {
-        $outline_id = $request->outline_id;
         $outline = Outline::findOrFail($outline_id);
         return compact('outline');
     }
