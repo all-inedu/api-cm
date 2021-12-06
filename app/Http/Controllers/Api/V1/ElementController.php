@@ -22,77 +22,77 @@ class ElementController extends Controller
     public function store(Request $request)
     {
 
-        $data = array(
-            'part_id' => 1,
-            'data' => 
-            array(
-                'c_element'   => 'multiple',
-                'description' => 'Ini contoh studi kasus', //value
-                'video_link'  => null,
-                'image_path'  => null,
-                'question'    => 'Ini pertanyaannya',
-                'total_point' => 0,
-                'order'       => 1, //! INDEX ARRAY +1
-                'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                'answer_in_array' => 
-                array(
-                    'answer' => 'pilih A salah',
-                    'value'  => false
-                ), array(
-                    'answer' => 'pilih B salah',
-                    'value'  => false
-                ), array(
-                    'answer' => 'pilih C benar',
-                    'value'  => true
-                ), array(
-                    'answer' => 'pilih D salah',
-                    'value'  => false
-                )
-            ), array(
-                'c_element'   => 'image',
-                'description' => null,
-                'video_link'  => null,
-                'image_path'  => '/uploaded_files/image.png', //file
-                'question'    => null,
-                'total_point' => 0,
-                'order'       => 2, //! INDEX ARRAY +1
-                'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                'answer_in_array' => array()
-            ), array(
-                'c_element'   => 'video',
-                'description' => null,
-                'video_link'  => 'https://123.com',
-                'image_path'  => '/uploaded_files/image.png', //file
-                'question'    => null,
-                'total_point' => 0,
-                'order'       => 2, //! INDEX ARRAY +1
-                'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                'answer_in_array' => array()
-            ), array(
-                'c_element'   => 'file',
-                'description' => 'lorem ipsum',
-                'video_link'  => null,
-                'image_path'  => '/uploaded_files/image.png', //file
-                'question'    => null,
-                'total_point' => 0,
-                'order'       => 2, //! INDEX ARRAY +1
-                'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                'answer_in_array' => array()
-            ), array(
-                'c_element'   => 'blank',
-                'description' => 'lorem ipsum',
-                'video_link'  => null,
-                'image_path'  => '/uploaded_files/image.png', //file
-                'question'    => null,
-                'type_blank'  => 'is exactly',
-                'total_point' => 0,
-                'order'       => 2, //! INDEX ARRAY +1
-                'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                'answer_in_array' => array()
-            )
-        );
+        // $data = array(
+        //     'part_id' => 1,
+        //     'data' => 
+        //     array(
+        //         'c_element'   => 'multiple',
+        //         'description' => 'Ini contoh studi kasus', //value
+        //         'video_link'  => null,
+        //         'image_path'  => null,
+        //         'question'    => 'Ini pertanyaannya',
+        //         'total_point' => 0,
+        //         'order'       => 1, //! INDEX ARRAY +1
+        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+        //         'answer_in_array' => 
+        //         array(
+        //             'answer' => 'pilih A salah',
+        //             'value'  => false
+        //         ), array(
+        //             'answer' => 'pilih B salah',
+        //             'value'  => false
+        //         ), array(
+        //             'answer' => 'pilih C benar',
+        //             'value'  => true
+        //         ), array(
+        //             'answer' => 'pilih D salah',
+        //             'value'  => false
+        //         )
+        //     ), array(
+        //         'c_element'   => 'image',
+        //         'description' => null,
+        //         'video_link'  => null,
+        //         'image_path'  => '/uploaded_files/image.png', //file
+        //         'question'    => null,
+        //         'total_point' => 0,
+        //         'order'       => 2, //! INDEX ARRAY +1
+        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+        //         'answer_in_array' => array()
+        //     ), array(
+        //         'c_element'   => 'video',
+        //         'description' => null,
+        //         'video_link'  => 'https://123.com',
+        //         'image_path'  => '/uploaded_files/image.png', //file
+        //         'question'    => null,
+        //         'total_point' => 0,
+        //         'order'       => 2, //! INDEX ARRAY +1
+        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+        //         'answer_in_array' => array()
+        //     ), array(
+        //         'c_element'   => 'file',
+        //         'description' => 'lorem ipsum',
+        //         'video_link'  => null,
+        //         'image_path'  => '/uploaded_files/image.png', //file
+        //         'question'    => null,
+        //         'total_point' => 0,
+        //         'order'       => 2, //! INDEX ARRAY +1
+        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+        //         'answer_in_array' => array()
+        //     ), array(
+        //         'c_element'   => 'blank',
+        //         'description' => 'lorem ipsum',
+        //         'video_link'  => null,
+        //         'image_path'  => '/uploaded_files/image.png', //file
+        //         'question'    => null,
+        //         'type_blank'  => 'is exactly',
+        //         'total_point' => 0,
+        //         'order'       => 2, //! INDEX ARRAY +1
+        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+        //         'answer_in_array' => array()
+        //     )
+        // );
 
-        print("<pre>".print_r($data, true)."</pre>");exit;
+        // print("<pre>".print_r($data, true)."</pre>");exit;
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
@@ -102,14 +102,14 @@ class ElementController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
-
+            
         try {
 
             $requestData = $request->data;
             foreach ($requestData as $data) 
             {
 
-                $category = $data->c_element;                
+                $category = $data['c_element'];
                 switch ($category) {
                     case "image":
                         $this->storeImage();
@@ -161,7 +161,7 @@ class ElementController extends Controller
         } catch (Exception $e) {
             
             Log::error($e->getMessage());
-
+            echo $e->getMessage();exit;
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
@@ -170,7 +170,7 @@ class ElementController extends Controller
 
     private function storeImage()
     {
-        
+
     }
 
     private function storeVideo()

@@ -8790,3 +8790,12 @@ Did you mean one of these?
 [2021-12-02 03:48:07] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'status' cannot be null (SQL: update `modules` set `status` = ?, `modules`.`updated_at` = 2021-12-02 03:48:07 where `id` = 1)  
 [2021-12-02 03:53:30] local.ERROR: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'status' cannot be null (SQL: update `modules` set `status` = ?, `modules`.`updated_at` = 2021-12-02 03:53:30 where `id` = 1)  
 [2021-12-02 04:26:25] local.ERROR: Property [id] does not exist on this collection instance.  
+[2021-12-06 05:48:28] local.ERROR: foreach() argument must be of type array|object, null given  
+[2021-12-06 05:48:50] local.ERROR: foreach() argument must be of type array|object, null given  
+[2021-12-06 05:49:14] local.ERROR: foreach() argument must be of type array|object, null given  
+[2021-12-06 05:49:16] local.ERROR: foreach() argument must be of type array|object, null given  
+[2021-12-06 05:53:29] local.ERROR: foreach() argument must be of type array|object, null given  
+[2021-12-06 05:57:30] local.ERROR: Attempt to read property "c_element" on array  
+[2021-12-06 05:57:53] local.ERROR: Attempt to read property "c_element" on array  
+[2021-12-06 05:58:36] local.ERROR: Attempt to read property "c_element" on array  
+[2021-12-06 05:58:49] local.ERROR: Attempt to read property "c_element" on array  
