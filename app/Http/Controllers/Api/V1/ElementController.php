@@ -96,6 +96,7 @@ class ElementController extends Controller
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
+            'module_id' => 'required|numeric|exists:modules,id',
             'data'    => 'required'
         ]);
 
@@ -104,7 +105,7 @@ class ElementController extends Controller
         }
             
         try {
-
+            $i = 1;
             $requestData = $request->data;
             foreach ($requestData as $data) 
             {
@@ -112,7 +113,17 @@ class ElementController extends Controller
                 $category = $data['c_element'];
                 switch ($category) {
                     case "image":
-                        $this->storeImage();
+                        $postData = array(
+                            'module_id'        => $request->module_id,
+                            'part_id'          => $request->part_id,
+                            'category_element' => $request->category_element,
+                            'description'      => $request->description,
+                            'total_point'      => 0,
+                            'order'            => $request->order,
+                            'group'            => $request->group,
+                            'file'             => $request->file('value')
+                        );
+                        $this->storeImage($postData);
                         break;
 
                     case "video":
@@ -120,7 +131,20 @@ class ElementController extends Controller
                         break;
 
                     case "text":
-                        $this->storeText();
+                        $postData = array(
+                            'part_id'          => $request->part_id,
+                            'category_element' => $request->category_element,
+                            'description'      => $request->description,
+                            'video_link'       => null,
+                            'image_path'       => null,
+                            'question'         => null,
+                            'total_point'      => 0,
+                            'order'            => $i,
+                            'group'            => 0, //$request->group
+                            'details_data'     => null
+                        );
+                        $this->storeText($postData);
+                        $i++;
                         break;
 
                     case "file":
@@ -161,16 +185,54 @@ class ElementController extends Controller
         } catch (Exception $e) {
             
             Log::error($e->getMessage());
-            echo $e->getMessage();exit;
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
         return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
     }
 
-    private function storeImage()
+    private function storeImage($postData)
     {
+        $module_id = $postData->module_id;
 
+        //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
+        if($file = $postData->hasFile('file')) 
+        {
+            $file            = $postData->file('file') ;
+            $extension       = $file->getClientOriginalExtension();
+            $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+            $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+
+            try {
+                if (file_exists(public_path($fileName))) {
+                    throw new Exception('Can\'t use same name. Filename already exists');
+                }
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
+            }
+
+            $file->move($destinationPath,$fileName);
+        }
+
+        //! INSERT INTO ELEMENT MASTER
+        try {
+            $element = Element::create([
+                'part_id'          => $postData->part_id,
+                'category_element' => $postData->category_element,
+                'description'      => $postData->description,
+                'video_link'       => $postData->video_link,
+                'image_path'       => $postData->image_path,
+                'question'         => $postData->question,
+                'total_point'      => 0,
+                'order'            => $postData->order,
+                'group'            => $postData->group
+            ]);
+
+            $element_id = $element->id();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 
     private function storeVideo()
@@ -178,9 +240,28 @@ class ElementController extends Controller
 
     }
 
-    private function storeText()
+    private function storeText($postData)
     {
+        //! INSERT INTO ELEMENT MASTER
+        try {
+            Element::create([
+                'part_id'          => $postData->part_id,
+                'category_element' => $postData->category_element,
+                'description'      => $postData->description,
+                'video_link'       => $postData->video_link,
+                'image_path'       => $postData->image_path,
+                'question'         => $postData->question,
+                'total_point'      => 0,
+                'order'            => $postData->order,
+                'group'            => $postData->group
+            ]);
 
+        } catch (Exception $e) {
+            DB::rollBack();
+            return array('success' => false, 'error' => $e->getMessage());
+        }
+        
+        return array('success' => true, 'message' => 'Element has successfuly inserted');
     }
 
     private function storeFile()
@@ -237,7 +318,7 @@ class ElementController extends Controller
 
         DB::commit();
 
-        return array('success' => true, 'error' => compact('element', 'the_answer'));
+        return array('success' => true, 'message' => compact('element', 'the_answer'));
     }
 
     private function storeFillInTheBlank()
