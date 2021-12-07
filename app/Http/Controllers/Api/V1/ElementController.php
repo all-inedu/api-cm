@@ -115,15 +115,22 @@ class ElementController extends Controller
                 $category = $data['c_element'];
                 switch ($category) {
                     case "image":
+
+                        return response()->json(['data' => array(
+                            'module_id' => $request->module_id,
+                            'part_id' => $request->part_id,
+                            'file' => $data 
+                        )]);
+
                         $postData = array(
                             'module_id'        => $request->module_id,
                             'part_id'          => $request->part_id,
-                            'category_element' => $request->category,
-                            'description'      => $request->description,
+                            'category_element' => $category,
+                            'description'      => null,
                             'total_point'      => 0,
-                            'order'            => $request->order,
-                            'group'            => $request->group,
-                            'file'             => $request->file('value')
+                            'order'            => $i,
+                            'group'            => 0,
+                            'file'             => $data->file('value')
                         );
                         $this->storeImage($postData);
                         break;
@@ -145,7 +152,7 @@ class ElementController extends Controller
                             'group'            => 0, //$request->group
                             'details_data'     => null
                         );
-                        return $this->storeText($postData);
+                        $this->storeText($postData);
                         $i++;
                         break;
 
@@ -259,13 +266,13 @@ class ElementController extends Controller
             ]);
         
         } catch (QueryException $e) {
-            return array('success' => false, 'error' => $e->getMessage());
+            return false;
 
         } catch (Exception $e) {
-            return array('success' => false, 'error' => $e->getMessage());
+            return false;
         }
         
-        return array('success' => true, 'message' => 'Element has successfuly inserted', 'data' => compact('element'));
+        return true;
     }
 
     private function storeFile()
