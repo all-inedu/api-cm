@@ -88,7 +88,7 @@ class ElementController extends Controller
 
                         $postData['question'] = $data['question'];
                         $postData['details_data'] = array(
-                            'answer_in_array' => $data['choice'],
+                            'answer_in_array' => $data['choices'],
                             // 'correct_answer'  => $data['correct_answer']
                         );
                         $this->storeMultipleChoice($postData);
