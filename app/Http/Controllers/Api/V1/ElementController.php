@@ -104,56 +104,54 @@ class ElementController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
+
+        $group = Element::where('part_id', $request->part_id)->max('group');
+        $group += 1;
             
-        // try {
+        try {
             $i = 1;
             $requestData = $request->data;
-            foreach ($requestData as $data) 
+            foreach ($requestData as $data)
             {
 
                 $category = $data['category'];
+                $postData = array(
+                    'module_id'        => $request->module_id,
+                    'part_id'          => $request->part_id,
+                    'category_element' => $category,
+                    'description'      => null,
+                    'video_link'       => null,
+                    'image_path'       => null,
+                    'file_path'        => null,
+                    'question'         => null,
+                    'total_point'      => 0,
+                    'order'            => $i,
+                    'group'            => $group,
+                    'file'             => null
+                );
+
                 switch ($category) {
                     case "image":
 
-                        $postData = array(
-                            'module_id'        => $request->module_id,
-                            'part_id'          => $request->part_id,
-                            'category_element' => $category,
-                            'description'      => null,
-                            'video_link'       => null,
-                            'image_path'       => null,
-                            'question'         => null,
-                            'total_point'      => 0,
-                            'order'            => $i,
-                            'group'            => 0,
-                            'file'             => $data['file']
-                        );
-                        return $this->storeImage($postData);
+                        $postData['file'] = $data['file'];
+                        $this->storeImage($postData);
                         break;
 
                     case "video":
-                        $this->storeVideo();
+                        $postData['video_link'] = $data['video_link'];
+                        $this->storeVideo($postData);
                         break;
 
                     case "text":
-                        $postData = array(
-                            'part_id'          => $request->part_id,
-                            'category_element' => $category,
-                            'description'      => $data['description'],
-                            'video_link'       => null,
-                            'image_path'       => null,
-                            'question'         => null,
-                            'total_point'      => 0,
-                            'order'            => $i,
-                            'group'            => 0, //$request->group
-                            'details_data'     => null
-                        );
+
+                        $postData['description'] = $data['description'];
                         $this->storeText($postData);
-                        $i++;
                         break;
 
                     case "file":
-                        $this->storeFile();
+
+                        $postData['file'] = $data['file'];
+                        $this->storeFile($postData);
                         break;
 
                     case "multiple":
@@ -179,22 +177,29 @@ class ElementController extends Controller
                         $this->storeFillInTheBlank();
                         break;
                 }
-                
+
+            $i++; 
             }
 
             
-        // } catch (QueryException $qe) {
+        } catch (QueryException $qe) {
 
-        //     Log::error($qe->getMessage());
-        //     return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
-        // } catch (Exception $e) {
+            Log::error($qe->getMessage());
+            return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
+        } catch (Exception $e) {
             
-        //     Log::error($e->getMessage());
-        //     return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
-        // }
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
+        }
 
         return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
     }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
 
     private function storeImage($postData)
     {
@@ -204,79 +209,159 @@ class ElementController extends Controller
         if (!$postData['file']) {
             return false;
         }
-        // if($file = $postData->hasFile('file')) 
-        // {
-            $file            = $postData['file'];
-            $extension       = $file->getClientOriginalExtension();
-            $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
-            $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+        
+        $file            = $postData['file'];
+        $extension       = $file->getClientOriginalExtension();
+        $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+        $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
 
-            try {
-                if (file_exists(public_path($fileName))) {
-                    throw new Exception('Can\'t use same name. Filename already exists');
-                }
-            } catch (Exception $e) {
-                DB::rollBack();
-                return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
-            }
+        if (file_exists(public_path($fileName))) {
+            throw new Exception('Can\'t use same name. Filename already exists');
+        }
 
-            $file->move($destinationPath,$fileName);
-        // }
+        $validator = Validator::make($file, [
+            'file' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+        ]);
 
+        if ($validator->fails()) {
+            throw new Exception($validator->errors());
+        }
+
+        $file->move($destinationPath,$fileName);
+        
         //! INSERT INTO ELEMENT MASTER
         try {
-            $element = Element::create([
+            Element::create([
                 'part_id'          => $postData['part_id'],
                 'category_element' => $postData['category_element'],
                 'description'      => $postData['description'],
                 'video_link'       => $postData['video_link'],
                 'image_path'       => $fileName,
+                'file_path'        => $postData['file_path'],
                 'question'         => $postData['question'],
                 'total_point'      => 0,
                 'order'            => $postData['order'],
                 'group'            => $postData['group']
             ]);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
+            throw new Exception($e->getMessage());
         }
-        return response()->json(['success' => true, 'data' => compact('element')], 200);
+        
     }
 
-    private function storeVideo()
-    {
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
 
-    }
-
-    private function storeText($postData)
+    private function storeVideo($postData)
     {
         //! INSERT INTO ELEMENT MASTER
         try {
-            $element = Element::create([
+            Element::create([
                 'part_id'          => $postData['part_id'],
                 'category_element' => $postData['category_element'],
                 'description'      => $postData['description'],
                 'video_link'       => $postData['video_link'],
                 'image_path'       => $postData['image_path'],
+                'file_path'        => $postData['file_path'],
                 'question'         => $postData['question'],
                 'total_point'      => 0,
                 'order'            => $postData['order'],
                 'group'            => $postData['group']
             ]);
-        
-        } catch (QueryException $e) {
-            return false;
-
         } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    private function storeText($postData)
+    {
+        //! INSERT INTO ELEMENT MASTER
+        try {
+            Element::create([
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $postData['image_path'],
+                'file_path'        => $postData['file_path'],
+                'question'         => $postData['question'],
+                'total_point'      => 0,
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
+            ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+    }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    private function storeFile($postData)
+    {
+        $module_id = $postData['module_id'];
+
+        //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
+        if (!$postData['file']) {
             return false;
         }
         
-        return true;
+        $file            = $postData['file'];
+        $extension       = $file->getClientOriginalExtension();
+        $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+        $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+
+        if (file_exists(public_path($fileName))) {
+            throw new Exception('Can\'t use same name. Filename already exists');
+        }
+
+        // $validator = Validator::make($file, [
+        //     'file' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+        // ]);
+
+        // if ($validator->fails()) {
+        //     throw new Exception($validator->errors());
+        // }
+
+        $file->move($destinationPath,$fileName);
+        
+        //! INSERT INTO ELEMENT MASTER
+        try {
+            Element::create([
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $postData['image_path'],
+                'file_path'        => $fileName,
+                'question'         => $postData['question'],
+                'total_point'      => 0,
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
+            ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
-    private function storeFile()
-    {
-
-    }
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
 
     private function storeMultipleChoice($postData)
     {
@@ -329,6 +414,12 @@ class ElementController extends Controller
 
         return array('success' => true, 'message' => compact('element', 'the_answer'));
     }
+
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////
 
     private function storeFillInTheBlank()
     {

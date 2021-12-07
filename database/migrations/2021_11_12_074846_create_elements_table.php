@@ -23,6 +23,7 @@ class CreateElementsTable extends Migration
             $table->text('description')->nullable();
             $table->text('video_link')->nullable();
             $table->text('image_path')->nullable();
+            $table->text('file_path')->nullable();
             $table->text('question')->nullable();
             $table->integer('total_point');
             $table->tinyInteger('order');

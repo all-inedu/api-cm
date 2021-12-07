@@ -20,6 +20,7 @@ class Element extends Model
         'description',
         'video_link',
         'image_path',
+        'file_path',
         'question',
         'total_point',
         'order',
