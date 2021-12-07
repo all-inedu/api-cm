@@ -310,7 +310,7 @@ class ElementController extends Controller
         //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
         try {
             $answerInArray = $postData['details_data']['answer_in_array'];
-            $correctAnswer = $postData['details_data']['correct_answer'];
+            // $correctAnswer = $postData['details_data']['correct_answer'];
             if (!is_array($answerInArray)) {
                 throw new Exception('Undefined multiple choice answer');
             }
