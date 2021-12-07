@@ -246,7 +246,7 @@ class ElementController extends Controller
     {
         //! INSERT INTO ELEMENT MASTER
         try {
-            Element::create([
+            $element = Element::create([
                 'part_id'          => $postData->part_id,
                 'category_element' => $postData->category_element,
                 'description'      => $postData->description,
@@ -265,7 +265,7 @@ class ElementController extends Controller
             return array('success' => false, 'error' => $e->getMessage());
         }
         
-        return array('success' => true, 'message' => 'Element has successfuly inserted');
+        return array('success' => true, 'message' => 'Element has successfuly inserted', 'data' => compact('element'));
     }
 
     private function storeFile()
