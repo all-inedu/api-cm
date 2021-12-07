@@ -72,7 +72,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('part', [PartController::class, 'store']);
         Route::delete('part/{part_id}/{outline_id}/{module_id}', [PartController::class, 'delete']);
 
-        Route::get('element/all', [ElementController::class, 'list']);
+        Route::get('element/{part_id}', [ElementController::class, 'list']);
         Route::post('element', [ElementController::class, 'store']);
         Route::put('element/{group_id}', [ElementController::class, 'update']);
 

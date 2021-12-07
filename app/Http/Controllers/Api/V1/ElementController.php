@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\DB;
 
 class ElementController extends Controller
 {
-    public function list(Request $request)
+    public function list($part_id)
     {
-        return Element::with('parts')->get();
+        return Element::with('parts')->where('part_id', $part_id)->get();
     }
 
     public function store(Request $request)
