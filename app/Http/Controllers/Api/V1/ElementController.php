@@ -320,7 +320,7 @@ class ElementController extends Controller
                 $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
                     'answer'     => $answerInArray[$i]['option'],
-                    'value'      => $answerInArray[$i]['value'] == 'TRUE' ? 1 : 0,
+                    'value'      => strtoupper($answerInArray[$i]['value']) == 'TRUE' ? 1 : 0,
                     // 'value'      => $correctAnswer == $i ? 1 : 0,
                     'point'      => 0
                 ]);
