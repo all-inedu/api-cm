@@ -75,7 +75,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('element/all', [ElementController::class, 'list']);
         Route::post('element', [ElementController::class, 'store']);
 
-        Route::post('test', function() {
+        Route::get('test', function() {
             return 'masuk';
         });
 
