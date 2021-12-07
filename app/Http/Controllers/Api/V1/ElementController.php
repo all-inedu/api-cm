@@ -135,8 +135,8 @@ class ElementController extends Controller
                     case "text":
                         $postData = array(
                             'part_id'          => $request->part_id,
-                            'category_element' => $request->category,
-                            'description'      => $request->description,
+                            'category_element' => $category,
+                            'description'      => $request['description'],
                             'video_link'       => null,
                             'image_path'       => null,
                             'question'         => null,
