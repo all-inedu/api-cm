@@ -74,6 +74,7 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::get('element/all', [ElementController::class, 'list']);
         Route::post('element', [ElementController::class, 'store']);
+        Route::put('element/{group_id}', [ElementController::class, 'update']);
 
         Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

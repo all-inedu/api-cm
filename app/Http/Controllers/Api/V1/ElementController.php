@@ -22,80 +22,6 @@ class ElementController extends Controller
     public function store(Request $request)
     {
 
-        // $data = array(
-        //     'part_id' => 1,
-        //     'data' => 
-        //     array(
-                // 'c_element'   => 'multiple',
-                // 'description' => 'Ini contoh studi kasus', //value
-                // 'video_link'  => null,
-                // 'image_path'  => null,
-                // 'question'    => 'Ini pertanyaannya',
-                // 'total_point' => 0,
-                // 'order'       => 1, //! INDEX ARRAY +1
-                // 'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-                // 'correct_answer' => 2,
-                // 'answer_in_array' => 
-                // array(
-                //     'answer' => 'pilih A salah',
-                //     'value'  => false
-                // ), array(
-                //     'answer' => 'pilih B salah',
-                //     'value'  => false
-                // ), array(
-                //     'answer' => 'pilih C benar',
-                //     'value'  => true
-                // ), array(
-                //     'answer' => 'pilih D salah',
-                //     'value'  => false
-                // )
-                
-        //     ), array(
-        //         'c_element'   => 'image',
-        //         'description' => null,
-        //         'video_link'  => null,
-        //         'image_path'  => '/uploaded_files/image.png', //file
-        //         'question'    => null,
-        //         'total_point' => 0,
-        //         'order'       => 2, //! INDEX ARRAY +1
-        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-        //         'answer_in_array' => array()
-        //     ), array(
-        //         'c_element'   => 'video',
-        //         'description' => null,
-        //         'video_link'  => 'https://123.com',
-        //         'image_path'  => '/uploaded_files/image.png', //file
-        //         'question'    => null,
-        //         'total_point' => 0,
-        //         'order'       => 2, //! INDEX ARRAY +1
-        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-        //         'answer_in_array' => array()
-        //     ), array(
-        //         'c_element'   => 'file',
-        //         'description' => 'lorem ipsum',
-        //         'video_link'  => null,
-        //         'image_path'  => '/uploaded_files/image.png', //file
-        //         'question'    => null,
-        //         'total_point' => 0,
-        //         'order'       => 2, //! INDEX ARRAY +1
-        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-        //         'answer_in_array' => array()
-        //     ), array(
-        //         'c_element'   => 'blank',
-        //         'description' => 'lorem ipsum',
-        //         'video_link'  => null,
-        //         'image_path'  => '/uploaded_files/image.png', //file
-        //         'question'    => null,
-        //         'type_blank'  => 'is exactly',
-        //         'total_point' => 0,
-        //         'order'       => 2, //! INDEX ARRAY +1
-        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-        //         'answer_in_array' => array()
-        //     )
-        // );
-
-        // print("<pre>".print_r($data, true)."</pre>");exit;
-
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
             'module_id' => 'required|numeric|exists:modules,id',
@@ -160,10 +86,10 @@ class ElementController extends Controller
 
                     case "multiple":
 
-                        $postData['description'] = $data['description'];
+                        $postData['question'] = $data['question'];
                         $postData['details_data'] = array(
                             'answer_in_array' => $data['choice'],
-                            'correct_answer'  => $data['correct_answer']
+                            // 'correct_answer'  => $data['correct_answer']
                         );
                         $this->storeMultipleChoice($postData);
                         break;
@@ -393,8 +319,9 @@ class ElementController extends Controller
             {
                 $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
-                    'answer'     => $answerInArray[$i],
-                    'value'      => $correctAnswer == $i ? 1 : 0,
+                    'answer'     => $answerInArray[$i]['answer'],
+                    'value'      => $answerInArray[$i]['value'],
+                    // 'value'      => $correctAnswer == $i ? 1 : 0,
                     'point'      => 0
                 ]);
             }
