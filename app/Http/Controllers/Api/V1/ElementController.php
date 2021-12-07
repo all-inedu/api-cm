@@ -2,12 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Key, Authorization');
-header('Access-Control-Allow-Credentials: true');
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
