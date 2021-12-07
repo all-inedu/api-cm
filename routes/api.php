@@ -45,7 +45,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware(['cors'])->group(function() {
+    // Route::middleware(['cors'])->group(function() {
     // Route::group(['middleware' => ['jwt.verify']], function () {
 
         //* Select User *//
@@ -76,5 +76,5 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('element', [ElementController::class, 'store']);
 
         Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
-    });
+    // });
 });
