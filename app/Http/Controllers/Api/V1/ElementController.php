@@ -22,7 +22,7 @@ class ElementController extends Controller
         foreach ($raw as $data) {
             $group = $data['group'];
 
-            $element["group-".$group][] = array(
+            $element["group ".$group][] = array(
                 'id' => $data['id'],
                 'part_id' => $data['part_id'],
                 'category_element' => $data['category_element'],
