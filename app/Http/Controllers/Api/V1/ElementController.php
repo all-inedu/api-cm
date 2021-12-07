@@ -136,7 +136,7 @@ class ElementController extends Controller
                         $postData = array(
                             'part_id'          => $request->part_id,
                             'category_element' => $category,
-                            'description'      => $request['description'],
+                            'description'      => $data['description'],
                             'video_link'       => null,
                             'image_path'       => null,
                             'question'         => null,
