@@ -257,9 +257,11 @@ class ElementController extends Controller
                 'order'            => $postData->order,
                 'group'            => $postData->group
             ]);
+        
+        } catch (QueryException $e) {
+            return array('success' => false, 'error' => $e->getMessage());
 
         } catch (Exception $e) {
-            DB::rollBack();
             return array('success' => false, 'error' => $e->getMessage());
         }
         
