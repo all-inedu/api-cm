@@ -198,6 +198,9 @@ class ElementController extends Controller
         $module_id = $postData['module_id'];
 
         //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
+        if (!$postData['file']) {
+            return false;
+        }
         // if($file = $postData->hasFile('file')) 
         // {
             $file            = $postData['file'];
