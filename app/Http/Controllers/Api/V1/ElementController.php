@@ -26,28 +26,30 @@ class ElementController extends Controller
         //     'part_id' => 1,
         //     'data' => 
         //     array(
-        //         'c_element'   => 'multiple',
-        //         'description' => 'Ini contoh studi kasus', //value
-        //         'video_link'  => null,
-        //         'image_path'  => null,
-        //         'question'    => 'Ini pertanyaannya',
-        //         'total_point' => 0,
-        //         'order'       => 1, //! INDEX ARRAY +1
-        //         'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
-        //         'answer_in_array' => 
-        //         array(
-        //             'answer' => 'pilih A salah',
-        //             'value'  => false
-        //         ), array(
-        //             'answer' => 'pilih B salah',
-        //             'value'  => false
-        //         ), array(
-        //             'answer' => 'pilih C benar',
-        //             'value'  => true
-        //         ), array(
-        //             'answer' => 'pilih D salah',
-        //             'value'  => false
-        //         )
+                // 'c_element'   => 'multiple',
+                // 'description' => 'Ini contoh studi kasus', //value
+                // 'video_link'  => null,
+                // 'image_path'  => null,
+                // 'question'    => 'Ini pertanyaannya',
+                // 'total_point' => 0,
+                // 'order'       => 1, //! INDEX ARRAY +1
+                // 'group'       => 1, //! GET LAST GROUP NUMBER THEN +1
+                // 'correct_answer' => 2,
+                // 'answer_in_array' => 
+                // array(
+                //     'answer' => 'pilih A salah',
+                //     'value'  => false
+                // ), array(
+                //     'answer' => 'pilih B salah',
+                //     'value'  => false
+                // ), array(
+                //     'answer' => 'pilih C benar',
+                //     'value'  => true
+                // ), array(
+                //     'answer' => 'pilih D salah',
+                //     'value'  => false
+                // )
+                
         //     ), array(
         //         'c_element'   => 'image',
         //         'description' => null,
@@ -93,7 +95,6 @@ class ElementController extends Controller
         // );
 
         // print("<pre>".print_r($data, true)."</pre>");exit;
-
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
@@ -161,8 +162,8 @@ class ElementController extends Controller
 
                         $postData['description'] = $data['description'];
                         $postData['details_data'] = array(
-                            'answer_in_array' => $data->answer,
-                            'correct_answer'  => $data->correct_answer
+                            'answer_in_array' => $data['choice'],
+                            'correct_answer'  => $data['correct_answer']
                         );
                         $this->storeMultipleChoice($postData);
                         break;
@@ -212,13 +213,13 @@ class ElementController extends Controller
             throw new Exception('Can\'t use same name. Filename already exists');
         }
 
-        $validator = Validator::make($file, [
-            'file' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-        ]);
+        // $validator = Validator::make($file, [
+        //     'file' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+        // ]);
 
-        if ($validator->fails()) {
-            throw new Exception($validator->errors());
-        }
+        // if ($validator->fails()) {
+        //     throw new Exception($validator->errors());
+        // }
 
         $file->move($destinationPath,$fileName);
         
@@ -374,7 +375,7 @@ class ElementController extends Controller
                 'group'            => $postData['group']
             ]);
 
-            $element_id = $element->id();
+            $element_id = $element->id;
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -382,8 +383,8 @@ class ElementController extends Controller
 
         //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
         try {
-            $answerInArray = $postData['details_data']['answerInArray'];
-            $correctAnswer = $postData['correct_answer'];
+            $answerInArray = $postData['details_data']['answer_in_array'];
+            $correctAnswer = $postData['details_data']['correct_answer'];
             if (!is_array($answerInArray)) {
                 throw new Exception('Undefined multiple choice answer');
             }
@@ -393,7 +394,8 @@ class ElementController extends Controller
                 $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
                     'answer'     => $answerInArray[$i],
-                    'value'      => $correctAnswer == $i ? 1 : 0
+                    'value'      => $correctAnswer == $i ? 1 : 0,
+                    'point'      => 0
                 ]);
             }
             

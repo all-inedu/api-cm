@@ -38,7 +38,6 @@
     34 => 'App\\Providers\\RouteServiceProvider',
     35 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     36 => 'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewerServiceProvider',
-    37 => 'Fruitcake\\Cors\\CorsServiceProvider',
   ),
   'eager' => 
   array (
@@ -65,7 +64,6 @@
     20 => 'App\\Providers\\RouteServiceProvider',
     21 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     22 => 'Rap2hpoutre\\LaravelLogViewer\\LaravelLogViewerServiceProvider',
-    23 => 'Fruitcake\\Cors\\CorsServiceProvider',
   ),
   'deferred' => 
   array (
