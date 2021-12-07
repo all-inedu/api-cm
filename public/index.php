@@ -2,7 +2,8 @@
 
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Key, Authorization');
+// header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Key, Authorization');
+header('Access-Control-Allow-Headers: *'); 
 header('Access-Control-Allow-Credentials: true');
 
 use Illuminate\Contracts\Http\Kernel;
