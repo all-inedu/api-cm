@@ -227,7 +227,7 @@ class ElementController extends Controller
                 'category_element' => $postData['category_element'],
                 'description'      => $postData['description'],
                 'video_link'       => $postData['video_link'],
-                'image_path'       => $destinationPath,
+                'image_path'       => $fileName,
                 'question'         => $postData['question'],
                 'total_point'      => 0,
                 'order'            => $postData['order'],
