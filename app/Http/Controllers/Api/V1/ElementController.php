@@ -17,11 +17,12 @@ class ElementController extends Controller
     public function list($part_id)
     {
         $raw = Element::where('part_id', $part_id)->get();
+        $element = array();
         // return compact('element');
         foreach ($raw as $data) {
             $group = $data['group'];
 
-            $element[$group][] = array(
+            $element["group-".$group][] = array(
                 'id' => $data['id'],
                 'part_id' => $data['part_id'],
                 'category_element' => $data['category_element'],
