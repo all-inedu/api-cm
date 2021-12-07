@@ -16,12 +16,12 @@ class ElementController extends Controller
 {
     public function list($part_id)
     {
-        $element = Element::where('part_id', $part_id)->get();
+        $raw = Element::where('part_id', $part_id)->get();
         // return compact('element');
-        foreach ($element as $data) {
+        foreach ($raw as $data) {
             $group = $data['group'];
 
-            $whole[$group][] = array(
+            $element[$group][] = array(
                 'id' => $data['id'],
                 'part_id' => $data['part_id'],
                 'category_element' => $data['category_element'],
@@ -35,7 +35,7 @@ class ElementController extends Controller
             );
         }
 
-        return compact('whole');
+        return compact('element');
     }
 
     public function store(Request $request)
