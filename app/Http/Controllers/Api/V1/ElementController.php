@@ -247,15 +247,15 @@ class ElementController extends Controller
         //! INSERT INTO ELEMENT MASTER
         try {
             $element = Element::create([
-                'part_id'          => $postData->part_id,
-                'category_element' => $postData->category_element,
-                'description'      => $postData->description,
-                'video_link'       => $postData->video_link,
-                'image_path'       => $postData->image_path,
-                'question'         => $postData->question,
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $postData['image_path'],
+                'question'         => $postData['question'],
                 'total_point'      => 0,
-                'order'            => $postData->order,
-                'group'            => $postData->group
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
             ]);
         
         } catch (QueryException $e) {
