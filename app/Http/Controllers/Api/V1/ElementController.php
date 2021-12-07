@@ -125,7 +125,7 @@ class ElementController extends Controller
                             'group'            => 0,
                             'file'             => $data['file']
                         );
-                        $this->storeImage($postData);
+                        return $this->storeImage($postData);
                         break;
 
                     case "video":
@@ -234,9 +234,9 @@ class ElementController extends Controller
                 'group'            => $postData['group']
             ]);
         } catch (Exception $e) {
-            return false;
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
         }
-        return true;
+        return response()->json(['success' => true, 'data' => compact('element')], 200);
     }
 
     private function storeVideo()
