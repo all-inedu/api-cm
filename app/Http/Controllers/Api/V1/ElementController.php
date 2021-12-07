@@ -94,7 +94,7 @@ class ElementController extends Controller
 
         // print("<pre>".print_r($data, true)."</pre>");exit;
 
-        
+        return response()->json($request->all());
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
