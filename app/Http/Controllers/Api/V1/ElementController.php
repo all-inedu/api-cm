@@ -118,7 +118,7 @@ class ElementController extends Controller
                         $postData = array(
                             'module_id'        => $request->module_id,
                             'part_id'          => $request->part_id,
-                            'category_element' => $request->category_element,
+                            'category_element' => $request->category,
                             'description'      => $request->description,
                             'total_point'      => 0,
                             'order'            => $request->order,
@@ -135,7 +135,7 @@ class ElementController extends Controller
                     case "text":
                         $postData = array(
                             'part_id'          => $request->part_id,
-                            'category_element' => $request->category_element,
+                            'category_element' => $request->category,
                             'description'      => $request->description,
                             'video_link'       => null,
                             'image_path'       => null,
@@ -156,7 +156,7 @@ class ElementController extends Controller
                     case "multiple":
                         $postData = array(
                             'part_id'          => $request->part_id,
-                            'category_element' => $request->category_element,
+                            'category_element' => $request->category,
                             'description'      => $request->description,
                             'video_link'       => null,
                             'image_path'       => null,
