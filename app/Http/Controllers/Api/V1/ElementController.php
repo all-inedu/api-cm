@@ -16,8 +16,26 @@ class ElementController extends Controller
 {
     public function list($part_id)
     {
-        $element = Element::with('parts')->where('part_id', $part_id)->get();
-        return compact('element');
+        $element = Element::where('part_id', $part_id)->get();
+        // return compact('element');
+        foreach ($element as $data) {
+            $group = $data['group'];
+
+            $whole[$group][] = array(
+                'id' => $data['id'],
+                'part_id' => $data['part_id'],
+                'category_element' => $data['category_element'],
+                'description' => $data['description'],
+                'video_link' => $data['video_link'],
+                'image_path' => $data['image_path'],
+                'file_path' => $data['file_path'],
+                'question' => $data['question'],
+                'order' => $data['order'],
+                'group' => $data['group']
+            );
+        }
+
+        return compact('whole');
     }
 
     public function store(Request $request)
