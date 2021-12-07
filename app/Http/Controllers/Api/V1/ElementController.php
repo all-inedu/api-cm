@@ -16,7 +16,8 @@ class ElementController extends Controller
 {
     public function list($part_id)
     {
-        return Element::with('parts')->where('part_id', $part_id)->get();
+        $element = Element::with('parts')->where('part_id', $part_id)->get();
+        return compact('element');
     }
 
     public function store(Request $request)
