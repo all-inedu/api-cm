@@ -319,7 +319,7 @@ class ElementController extends Controller
             {
                 $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
-                    'answer'     => $answerInArray[$i]['answer'],
+                    'answer'     => $answerInArray[$i]['option'],
                     'value'      => $answerInArray[$i]['value'],
                     // 'value'      => $correctAnswer == $i ? 1 : 0,
                     'point'      => 0
