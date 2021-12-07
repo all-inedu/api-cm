@@ -95,7 +95,11 @@ class ElementController extends Controller
                         break;
 
                     case "blank":
-                        $this->storeFillInTheBlank();
+
+                        $postData['question'] = $data['question'];
+                        $postData['type_blank'] = $data['type_blank'];
+                        $postData['answer'] = $data['answer'];
+                        $this->storeFillInTheBlank($postData);
                         break;
                 }
 
@@ -337,8 +341,43 @@ class ElementController extends Controller
     //////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////
 
-    private function storeFillInTheBlank()
+    private function storeFillInTheBlank($postData)
     {
+        //! INSERT INTO ELEMENT MASTER
+        try {
+            $element = Element::create([
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $postData['image_path'],
+                'file_path'        => $postData['file_path'],
+                'question'         => $postData['question'],
+                'total_point'      => 0,
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
+            ]);
 
+            $element_id = $element->id;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
+        try {
+
+            ElementDetail::create([
+                'element_id' => $element_id,
+                'answer'     => $postData['answer'],
+                'value'      => 1,
+                // 'value'      => $correctAnswer == $i ? 1 : 0,
+                'type_blank' => $postData['type_blank'],
+                'point'      => 0
+            ]);
+            
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

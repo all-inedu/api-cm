@@ -20,6 +20,7 @@ class CreateElementDetailsTable extends Migration
             $table->foreign('element_id')->references('id')->on('elements')->onUpdate('cascade')->onDelete('cascade');
             $table->text('answer');
             $table->boolean('value');
+            $table->string('type_blank');
             $table->integer('point');
             $table->timestamps();
         });

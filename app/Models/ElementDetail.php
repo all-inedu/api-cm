@@ -18,6 +18,7 @@ class ElementDetail extends Model
         'element_id',
         'answer',
         'value',
+        'type_blank',
         'point'
     ];
 
