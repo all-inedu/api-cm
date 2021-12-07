@@ -94,7 +94,6 @@ class ElementController extends Controller
 
         // print("<pre>".print_r($data, true)."</pre>");exit;
 
-        return response()->json($request->all());
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
@@ -112,15 +111,9 @@ class ElementController extends Controller
             foreach ($requestData as $data) 
             {
 
-                $category = $data['c_element'];
+                $category = $data['category'];
                 switch ($category) {
                     case "image":
-
-                        return response()->json(['data' => array(
-                            'module_id' => $request->module_id,
-                            'part_id' => $request->part_id,
-                            'file' => $data 
-                        )]);
 
                         $postData = array(
                             'module_id'        => $request->module_id,
@@ -130,7 +123,7 @@ class ElementController extends Controller
                             'total_point'      => 0,
                             'order'            => $i,
                             'group'            => 0,
-                            'file'             => $data->file('value')
+                            'file'             => $data['value']
                         );
                         $this->storeImage($postData);
                         break;
@@ -202,12 +195,12 @@ class ElementController extends Controller
 
     private function storeImage($postData)
     {
-        $module_id = $postData->module_id;
+        $module_id = $postData['module_id'];
 
         //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
-        if($file = $postData->hasFile('file')) 
-        {
-            $file            = $postData->file('file') ;
+        // if($file = $postData->hasFile('file')) 
+        // {
+            $file            = $postData['file'];
             $extension       = $file->getClientOriginalExtension();
             $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
             $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
@@ -222,26 +215,25 @@ class ElementController extends Controller
             }
 
             $file->move($destinationPath,$fileName);
-        }
+        // }
 
         //! INSERT INTO ELEMENT MASTER
         try {
             $element = Element::create([
-                'part_id'          => $postData->part_id,
-                'category_element' => $postData->category_element,
-                'description'      => $postData->description,
-                'video_link'       => $postData->video_link,
-                'image_path'       => $postData->image_path,
-                'question'         => $postData->question,
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $destinationPath,
+                'question'         => $postData['question'],
                 'total_point'      => 0,
-                'order'            => $postData->order,
-                'group'            => $postData->group
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
             ]);
-
-            $element_id = $element->id();
         } catch (Exception $e) {
-            DB::rollBack();
+            return false;
         }
+        return true;
     }
 
     private function storeVideo()
