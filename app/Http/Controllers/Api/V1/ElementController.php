@@ -105,7 +105,7 @@ class ElementController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
             
-        try {
+        // try {
             $i = 1;
             $requestData = $request->data;
             foreach ($requestData as $data) 
@@ -180,15 +180,15 @@ class ElementController extends Controller
             }
 
             
-        } catch (QueryException $qe) {
+        // } catch (QueryException $qe) {
 
-            Log::error($qe->getMessage());
-            return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
-        } catch (Exception $e) {
+        //     Log::error($qe->getMessage());
+        //     return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
+        // } catch (Exception $e) {
             
-            Log::error($e->getMessage());
-            return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
-        }
+        //     Log::error($e->getMessage());
+        //     return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
+        // }
 
         return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
     }
