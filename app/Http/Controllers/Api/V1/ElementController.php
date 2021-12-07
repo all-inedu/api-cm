@@ -123,7 +123,7 @@ class ElementController extends Controller
                             'total_point'      => 0,
                             'order'            => $i,
                             'group'            => 0,
-                            'file'             => $data['value']
+                            'file'             => $data['file']
                         );
                         $this->storeImage($postData);
                         break;
