@@ -94,7 +94,7 @@ class ElementController extends Controller
 
         // print("<pre>".print_r($data, true)."</pre>");exit;
 
-        $element = DB::table('element');
+        
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
