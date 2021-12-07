@@ -107,8 +107,11 @@ class ElementController extends Controller
 
         $group = Element::where('part_id', $request->part_id)->max('group');
         $group += 1;
-            
-        try {
+       
+        DB::beginTransaction();
+
+        try 
+        {
             $i = 1;
             $requestData = $request->data;
             foreach ($requestData as $data)
@@ -155,22 +158,13 @@ class ElementController extends Controller
                         break;
 
                     case "multiple":
-                        $postData = array(
-                            'part_id'          => $request->part_id,
-                            'category_element' => $request->category,
-                            'description'      => $request->description,
-                            'video_link'       => null,
-                            'image_path'       => null,
-                            'question'         => null,
-                            'total_point'      => 0,
-                            'order'            => $request->order,
-                            'group'            => $request->group,
-                            'details_data'     => array(
-                                        'answer_in_array' => $data->answer,
-                                        'correct_answer' => $data->correct_answer
-                                        )
+
+                        $postData['description'] = $data['description'];
+                        $postData['details_data'] = array(
+                            'answer_in_array' => $data->answer,
+                            'correct_answer'  => $data->correct_answer
                         );
-                        $response = $this->storeMultipleChoice($postData);
+                        $this->storeMultipleChoice($postData);
                         break;
 
                     case "blank":
@@ -180,18 +174,17 @@ class ElementController extends Controller
 
             $i++; 
             }
-
-            
         } catch (QueryException $qe) {
-
+            DB::rollBack();
             Log::error($qe->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         } catch (Exception $e) {
-            
+            DB::rollBack();
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
         }
 
+        DB::commit();
         return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
     }
 
@@ -365,33 +358,32 @@ class ElementController extends Controller
 
     private function storeMultipleChoice($postData)
     {
-        DB::beginTransaction();
-
+        
         //! INSERT INTO ELEMENT MASTER
         try {
             $element = Element::create([
-                'part_id'          => $postData->part_id,
-                'category_element' => $postData->category_element,
-                'description'      => $postData->description,
-                'video_link'       => $postData->video_link,
-                'image_path'       => $postData->image_path,
-                'question'         => $postData->question,
+                'part_id'          => $postData['part_id'],
+                'category_element' => $postData['category_element'],
+                'description'      => $postData['description'],
+                'video_link'       => $postData['video_link'],
+                'image_path'       => $postData['image_path'],
+                'file_path'        => $postData['file_path'],
+                'question'         => $postData['question'],
                 'total_point'      => 0,
-                'order'            => $postData->order,
-                'group'            => $postData->group
+                'order'            => $postData['order'],
+                'group'            => $postData['group']
             ]);
 
             $element_id = $element->id();
 
         } catch (Exception $e) {
-            DB::rollBack();
-            return array('success' => false, 'error' => $e->getMessage());
+            throw new Exception($e->getMessage());
         }
 
         //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
         try {
-            $answerInArray = $postData->details_data->answerInArray;
-            $correctAnswer = $postData->correct_answer;
+            $answerInArray = $postData['details_data']['answerInArray'];
+            $correctAnswer = $postData['correct_answer'];
             if (!is_array($answerInArray)) {
                 throw new Exception('Undefined multiple choice answer');
             }
@@ -400,19 +392,14 @@ class ElementController extends Controller
             {
                 $the_answer[] = ElementDetail::create([
                     'element_id' => $element_id,
-                    'answer' => $answerInArray[$i],
-                    'value' => $correctAnswer == $i ? 1 : 0
+                    'answer'     => $answerInArray[$i],
+                    'value'      => $correctAnswer == $i ? 1 : 0
                 ]);
             }
             
         } catch (Exception $e) {
-            DB::rollBack();
-            return array('success' => false, 'error' => $e->getMessage());
+            throw new Exception($e->getMessage());
         }
-
-        DB::commit();
-
-        return array('success' => true, 'message' => compact('element', 'the_answer'));
     }
 
     //////////////////////////////////////////////////////////////
