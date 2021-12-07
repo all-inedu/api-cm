@@ -145,7 +145,7 @@ class ElementController extends Controller
                             'group'            => 0, //$request->group
                             'details_data'     => null
                         );
-                        $this->storeText($postData);
+                        return $this->storeText($postData);
                         $i++;
                         break;
 
