@@ -21,11 +21,6 @@ class ElementController extends Controller
 
     public function store(Request $request)
     {
-        echo 'a';exit;
-    }
-
-    public function store1(Request $request)
-    {
 
         // $data = array(
         //     'part_id' => 1,
