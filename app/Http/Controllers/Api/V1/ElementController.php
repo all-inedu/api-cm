@@ -261,33 +261,33 @@ class ElementController extends Controller
 
     private function updateFile($postData)
     {
-        if (!$postData['file']) {
-            throw new Exception('File not found');
-        }
-
         $element_id = $postData['element_id'];
         $element = Element::findOrFail($element_id);
-        $old_file_path = $element->file_path;
-
-        $module_id = $postData['module_id'];
-        $file = $postData['file'];
-        $extension = $file->getClientOriginalExtension();
-        $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
-        $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
-
-        //! CHECKING IF THERE'S A FILE INI THE DIRECTORY WITH $fileName
-        if (file_exists(public_path($fileName))) {
-            throw new Exception('Can\'t use same name. Filename already exists');
+        if ($postData['file'] != "null") {
+            $old_file_path = $element->file_path;
+    
+            $module_id = $postData['module_id'];
+            $file = $postData['file'];
+            $extension = $file->getClientOriginalExtension();
+            $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+            $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+    
+            //! CHECKING IF THERE'S A FILE INI THE DIRECTORY WITH $fileName
+            if (file_exists(public_path($fileName))) {
+                throw new Exception('Can\'t use same name. Filename already exists');
+            }
+    
+            //! CHECKING IF OLD FILE WAS THERE ON THE DIRECTORY AND NEED TO BE DELETED
+            if (file_exists(public_path($old_file_path))) {
+                File::delete($old_file_path);
+            }
+            
+            $file->move($destinationPath,$fileName);
+    
+            $element->file_path = $fileName;
         }
 
-        //! CHECKING IF OLD FILE WAS THERE ON THE DIRECTORY AND NEED TO BE DELETED
-        if (file_exists(public_path($old_file_path))) {
-            File::delete($old_file_path);
-        }
         
-        $file->move($destinationPath,$fileName);
-
-        $element->file_path = $fileName;
         $element->question = $postData['question'];
         $element->save();
     }
