@@ -23,6 +23,8 @@ class RouteServiceProvider extends ServiceProvider
     public const PAGINATION_PAGE_STUDENT = 9;
     public const PAGINATION_PAGE_MODULE = 10;
 
+    public const MAX_SIZE_OF_UPLOADED_IMAGE = 1048576;
+
     /**
      * The controller namespace for the application.
      *

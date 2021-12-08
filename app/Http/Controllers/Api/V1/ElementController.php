@@ -9,15 +9,25 @@ use Illuminate\Database\QueryException;
 use Exception;
 use App\Models\Element;
 use App\Models\ElementDetail;
+use App\Models\Module;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use App\Providers\RouteServiceProvider;
 
 class ElementController extends Controller
 {
 
-    public function getElementDetailById($element_id)
+    private $maxSizeOfUploadedImage;
+
+    public function __construct() {
+
+        $this->maxSizeOfUploadedImage = RouteServiceProvider::MAX_SIZE_OF_UPLOADED_IMAGE;
+    }
+
+    public function getDetailElementById($element_id)
     {
-        $element = Element::findOrFail($element_id);
+        $element = Element::with('elementdetails')->findOrFail($element_id);
         return compact('element');
     }
 
@@ -48,6 +58,10 @@ class ElementController extends Controller
 
     public function store(Request $request)
     {
+        $element_id = "";
+        if(isset($request->element_id)) {
+            $element_id = $request->element_id;
+        }
 
         $validator = Validator::make($request->all(), [
             'part_id' => 'required|numeric|exists:parts,id',
@@ -73,6 +87,7 @@ class ElementController extends Controller
 
                 $category = $data['category'];
                 $postData = array(
+                    'element_id'       => $element_id,
                     'module_id'        => $request->module_id,
                     'part_id'          => $request->part_id,
                     'category_element' => $category,
@@ -91,34 +106,54 @@ class ElementController extends Controller
                     case "image":
 
                         $postData['file'] = $data['file'];
-                        $this->storeImage($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeImage($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateImage($postData);
+                        }
                         break;
 
                     case "video":
+
                         $postData['video_link'] = $data['video_link'];
-                        $this->storeVideo($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeVideo($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateVideo($postData);
+                        }
                         break;
 
                     case "text":
 
                         $postData['description'] = $data['description'];
-                        $this->storeText($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeText($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateText($postData);
+                        }
                         break;
 
                     case "file":
 
                         $postData['file'] = $data['file'];
-                        $this->storeFile($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeFile($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateFile($postData);
+                        }
                         break;
 
                     case "multiple":
 
                         $postData['question'] = $data['question'];
                         $postData['details_data'] = array(
-                            'answer_in_array' => $data['choices'],
-                            // 'correct_answer'  => $data['correct_answer']
+                            'answer_in_array' => $data['choices']
                         );
-                        $this->storeMultipleChoice($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeMultipleChoice($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateMultipleChoice($postData);
+                        }
                         break;
 
                     case "blank":
@@ -143,7 +178,140 @@ class ElementController extends Controller
         }
 
         DB::commit();
-        return response()->json(['success' => true, 'message' => 'Element has successfully stored'], 201);
+
+        $message = 'Element has successfully stored';
+        if ($element_id != '') {
+            $message = 'Element has successfully updated';
+        }
+        return response()->json(['success' => true, 'message' => $message], 201);
+    }
+
+    private function updateImage($postData)
+    {
+        if (!$postData['file']) {
+            throw new Exception('Image not found');
+        }
+
+        $element_id = $postData['element_id'];
+        $element = Element::findOrFail($element_id);
+        $old_image_path = $element->image_path;
+
+        $module_id = $postData['module_id'];
+        $file = $postData['file'];
+        $extension = $file->getClientOriginalExtension();
+        $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+        $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+
+        //! CHECKING IF THERE'S A FILE INI THE DIRECTORY WITH $fileName
+        if (file_exists(public_path($fileName))) {
+            throw new Exception('Can\'t use same name. Filename already exists');
+        }
+
+        //! CHECKING IF OLD FILE WAS THERE ON THE DIRECTORY AND NEED TO BE DELETED
+        if (file_exists(public_path($old_image_path))) {
+            File::delete($old_image_path);
+        }
+        
+        $file->move($destinationPath,$fileName);
+
+        $element->image_path = $fileName;
+        $element->save();
+    }
+
+    private function updateVideo($postData)
+    {
+        $element_id = $postData['element_id'];
+        try {
+            $element = Element::findOrFail($element_id);
+            $element->video_link = $postData['video_link'];
+            $element->save();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    private function updateText($postData)
+    {
+        $element_id = $postData['element_id'];
+        try {
+            $element = Element::findOrFail($element_id);
+            $element->description = $postData['description'];
+            $element->save();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    private function updateFile($postData)
+    {
+        if (!$postData['file']) {
+            throw new Exception('File not found');
+        }
+
+        $element_id = $postData['element_id'];
+        $element = Element::findOrFail($element_id);
+        $old_file_path = $element->file_path;
+
+        $module_id = $postData['module_id'];
+        $file = $postData['file'];
+        $extension = $file->getClientOriginalExtension();
+        $fileName = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+        $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
+
+        //! CHECKING IF THERE'S A FILE INI THE DIRECTORY WITH $fileName
+        if (file_exists(public_path($fileName))) {
+            throw new Exception('Can\'t use same name. Filename already exists');
+        }
+
+        //! CHECKING IF OLD FILE WAS THERE ON THE DIRECTORY AND NEED TO BE DELETED
+        if (file_exists(public_path($old_file_path))) {
+            File::delete($old_file_path);
+        }
+        
+        $file->move($destinationPath,$fileName);
+
+        $element->file_path = $fileName;
+        $element->save();
+    }
+
+    private function updateMultipleChoice($postData)
+    {
+        $element_id = $postData['element_id'];
+        try {
+
+            $element = Element::findOrFail($element_id);
+            $element->question = $postData['question'];
+            $element->save();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
+        try {
+            $answerInArray = $postData['details_data']['answer_in_array'];
+            // $correctAnswer = $postData['details_data']['correct_answer'];
+            if (!is_array($answerInArray)) {
+                throw new Exception('Undefined multiple choice answer');
+            }
+
+            $element_detail_data = ElementDetail::where('element_id', $element_id)->get();
+            if (count($element_detail_data) == 0) {
+                throw new Exception('Cannot found element detail with element id : '.$element_id);
+            }
+            
+            $index = 0;
+            foreach ($element_detail_data as $data) {
+                $element_detail_id = $data->id;
+                $element_detail = ElementDetail::findOrFail($element_detail_id);
+                $element_detail->answer = $answerInArray[$index]['option'];
+                $element_detail->value = strtoupper($answerInArray[$index]['value']) == 'TRUE' ? 1 : 0;
+                $element_detail->save();
+                $index++;
+            }
+            
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     //////////////////////////////////////////////////////////////
@@ -154,15 +322,15 @@ class ElementController extends Controller
 
     private function storeImage($postData)
     {
-        $module_id = $postData['module_id'];
 
-        //! IF INSERT DB WAS SUCCESS THEN UPLOAD FILE
         if (!$postData['file']) {
-            return false;
+            throw new Exception('Image not found');
         }
-        
+
+        $module_id = $postData['module_id'];
         $file            = $postData['file'];
         $extension       = $file->getClientOriginalExtension();
+        $size            = $file->getSize();
         $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
         $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
 
@@ -170,18 +338,21 @@ class ElementController extends Controller
             throw new Exception('Can\'t use same name. Filename already exists');
         }
 
-        // $validator = Validator::make($file, [
-        //     'file' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-        // ]);
+        $allowed_extension = ['jpg', 'jpeg', 'png'];
 
-        // if ($validator->fails()) {
-        //     throw new Exception($validator->errors());
-        // }
+        if ( !in_array(strtolower($extension), $allowed_extension) ) { 
+            throw new Exception('Only jpeg, jpg, and png files should be uploaded.');
+        }
+
+        if ($size > $this->maxSizeOfUploadedImage) {
+            throw new Exception('Image size must be less than 1 Mb');   
+        }
 
         $file->move($destinationPath,$fileName);
         
-        //! INSERT INTO ELEMENT MASTER
         try {
+
+            //! INSERT INTO ELEMENT MASTER
             Element::create([
                 'part_id'          => $postData['part_id'],
                 'category_element' => $postData['category_element'],
@@ -194,6 +365,8 @@ class ElementController extends Controller
                 'order'            => $postData['order'],
                 'group'            => $postData['group']
             ]);
+            
+            
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

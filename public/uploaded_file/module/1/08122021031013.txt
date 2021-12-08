@@ -1,0 +1,31 @@
+/////////////////////////////////
+// TECHNICAL TEST INTERNSHIP  ///
+/////////////////////////////////
+
+back end : analisis database
+   - database rental mobil
+
+front end : bikin ui one page
+   - search box
+   - banner
+   - category
+   - car list > nama, category, price, foto
+   - about us
+   - contact us
+
+
+/////////////////////////////////
+// TECHNICAL TEST FRESH GRAD  ///
+/////////////////////////////////
+
+back end : analisis database dan crud
+
+front end : bikin website pakai framework (contoh: react / vue / bootstrap)
+
+/////////////////////////////////
+// TECHNICAL TEST EXPERIENCE  ///
+/////////////////////////////////
+
+back end : analisis database dan crud with API
+
+front end : bikin website pakai framework (contoh: react / vue / bootstrap) + konek API buat login

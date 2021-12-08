@@ -1,0 +1,18 @@
+Essay :
+1. (-) penilaian
+
+================
+
+Noted : 
+1. bisa selain pilihan ganda (kaya matching)
+2. 
+
+================
+
+Yg perlu dipastiin:
+1. Question itu jawabannya ada multiple choice (ada poinnya), matching (kolom kiri = kolom kanan), ranking (nyusun kalimat, ngurutin), category, fill in the blanks (harus exact answer)
+2. Ada Category Element utk Upload File
+
+=================
+
+mentoring platform
