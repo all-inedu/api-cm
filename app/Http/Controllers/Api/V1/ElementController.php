@@ -161,7 +161,11 @@ class ElementController extends Controller
                         $postData['question'] = $data['question'];
                         $postData['type_blank'] = $data['type_blank'];
                         $postData['answer'] = $data['answer'];
-                        $this->storeFillInTheBlank($postData);
+                        if ($element_id == '') { //! IF ELEMENT ID IS NULL
+                            $this->storeFillInTheBlank($postData);
+                        } else { //! IF ELEMENT ID EXIST
+                            $this->updateFillInTheBlank($postData);
+                        }
                         break;
                 }
 
@@ -298,7 +302,7 @@ class ElementController extends Controller
             if (count($element_detail_data) == 0) {
                 throw new Exception('Cannot found element detail with element id : '.$element_id);
             }
-            
+
             $index = 0;
             foreach ($element_detail_data as $data) {
                 $element_detail_id = $data->id;
@@ -312,6 +316,34 @@ class ElementController extends Controller
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    private function updateFillInTheBlank($postData)
+    {
+        $element_id = $postData['element_id'];
+
+        try {
+
+            $element = Element::findOrFail($element_id);
+            $element->question = $postData['question'];
+            $element->save();
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        //! IF ELEMENT MASTER HAS SUCCESSFULY INSERTED THEN GET THE ID AND INSERT ELEMENT DETAIL
+        try {
+
+            $element_detail = ElementDetail::where('element_id', $element_id)->firstOrFail();
+            $element_detail->answer = $postData['answer'];
+            $element_detail->type_blank = $postData['type_blank'];
+            $element_detail->save();
+            
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    
     }
 
     //////////////////////////////////////////////////////////////
