@@ -25,6 +25,18 @@ class ElementController extends Controller
         $this->maxSizeOfUploadedImage = RouteServiceProvider::MAX_SIZE_OF_UPLOADED_IMAGE;
     }
 
+    public function delete($element_id)
+    {
+        try {
+            $element = Element::findOrFail($element_id);
+            $element->delete();
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Element has successfuly deleted']);
+    }
+
     public function getDetailElementById($element_id)
     {
         $element = Element::with('elementdetails')->findOrFail($element_id);
@@ -276,6 +288,7 @@ class ElementController extends Controller
         $file->move($destinationPath,$fileName);
 
         $element->file_path = $fileName;
+        $element->question = $postData['question'];
         $element->save();
     }
 
