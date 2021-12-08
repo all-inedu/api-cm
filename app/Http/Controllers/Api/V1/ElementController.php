@@ -135,6 +135,7 @@ class ElementController extends Controller
 
                     case "file":
 
+                        $postData['question'] = $data['question'];
                         $postData['file'] = $data['file'];
                         if ($element_id == '') { //! IF ELEMENT ID IS NULL
                             $this->storeFile($postData);
