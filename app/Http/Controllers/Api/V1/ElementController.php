@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class ElementController extends Controller
 {
+
+    public function getElementDetailById($element_id)
+    {
+        $element = Element::findOrFail($element_id);
+        return compact('element');
+    }
+
     public function list($part_id)
     {
         $raw = Element::where('part_id', $part_id)->get();
