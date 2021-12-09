@@ -27,16 +27,19 @@ class ElementController extends Controller
 
     public function updateOrder(Request $request)
     {
+
+        DB::beginTransaction();
         try {
             $element_id       = $request->element_id;
             $part_id          = $request->part_id;
             $group            = $request->part_id;
             $new_order_number = $request->order;
     
+            //! FIND THE OLD ELEMENT ID WITH REQUESTED ORDER NUMBER 
             $sql_other_element = Element::where('part_id', $part_id)->where('group', $group)->where('order', $new_order_number)->firstOrFail();
             $other_element_id = $sql_other_element->id;
     
-            //! UPDATE THIS ELEMENT ORDER NUMBER
+            //! UPDATE NEW ELEMENT ORDER NUMBER
             $element = Element::findOrFail($element_id);
             $old_order_number = $element->order;
             $element->order = $new_order_number;
@@ -46,9 +49,15 @@ class ElementController extends Controller
             $other_element = Element::findOrFail($other_element_id);
             $other_element->order = $old_order_number;
             $other_element->save();
-        } catch (Exception $e) {
 
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
+
+        return response()->json(['success' => true, 'message' => 'Element order has successfuly updated'], 200);
 
     }
 
