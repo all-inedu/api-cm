@@ -51,7 +51,7 @@ class OutlineController extends Controller
         }
 
         $outline = $outline
-                    ->selectRaw('outlines.*, COUNT(*) as jumlah_part')
+                    ->selectRaw('outlines.*, COUNT(*) as total_part')
                     ->join('outlines', 'outlines.id', '=', 'parts.outline_id')
                     ->where('outlines.module_id', $module_id)->groupBy('parts.outline_id')->get();
 
