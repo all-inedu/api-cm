@@ -186,6 +186,15 @@ class ElementController extends Controller
                         break;
                 }
 
+                //! CHECKING PROGRESS STATUS
+                $module = Module::findOrFail($request->module_id);
+                $module_progress = $module->progress;
+
+                if ($module_progress < 5) {
+                    $module->progress = $module_progress = 4;
+                    $module->save();
+                }
+
             $i++; 
             }
         } catch (QueryException $qe) {
