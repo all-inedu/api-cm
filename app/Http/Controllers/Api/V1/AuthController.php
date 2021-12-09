@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Models\Login;
 
 class AuthController extends Controller
 {
@@ -56,6 +58,12 @@ class AuthController extends Controller
 
         $currentUser = Auth::user();
         $currentUser['token'] = $token;
+
+        Login::create([
+            'user_id' => $currentUser->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
 
         return response()->json(['success' => true, 'data' => $currentUser], 200);
     }

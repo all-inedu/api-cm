@@ -11,6 +11,7 @@ use JWTAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Psy\CodeCleaner\ValidConstructorPass;
+use App\Models\Login;
 
 class UserController extends Controller
 {
@@ -27,12 +28,19 @@ class UserController extends Controller
         // echo $date = date("Y-m-d",strtotime('monday this week')).' To '.date("Y-m-d",strtotime("sunday this week"));    
         $start_date = date("Y-m-d",strtotime('monday this week'));
         $end_date = date("Y-m-d",strtotime("sunday this week"));
+        $data = array();
 
-        $user = User::where('role_id', 1)->whereBetween('created_at', [$start_date, $end_date])->count();
+        for ($i = 0 ; $i < 7 ; $i++) {
+            $data['register']['total_user'][] = User::where('role_id', 1)->where('created_at', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))))->count();
+            $data['register']['day'][] = date('l', strtotime("+".$i." day", strtotime($start_date)));
+            $data['register']['date'][] = date('d-m-Y', strtotime("+".$i." day", strtotime($start_date)));
 
-        return array(
-            'user' => $user
-        );
+            $data['login']['total_user'][] = Login::where('created_at', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))))->count();
+            $data['login']['day'][] = date('l', strtotime("+".$i." day", strtotime($start_date)));
+            $data['login']['date'][] = date('d-m-Y', strtotime("+".$i." day", strtotime($start_date)));
+        }
+
+        return compact('data');
     }
 
     public function countUserRegistered()

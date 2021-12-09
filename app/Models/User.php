@@ -52,6 +52,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function login()
+    {
+        return $this->hasMany(Login::class, 'user_id', 'id');
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
