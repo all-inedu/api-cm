@@ -25,9 +25,31 @@ class ElementController extends Controller
         $this->maxSizeOfUploadedImage = RouteServiceProvider::MAX_SIZE_OF_UPLOADED_IMAGE;
     }
 
-    public function updateOrder($order_number)
+    public function updateOrder(Request $request)
     {
-        
+        try {
+            $element_id       = $request->element_id;
+            $part_id          = $request->part_id;
+            $group            = $request->part_id;
+            $new_order_number = $request->order;
+    
+            $sql_other_element = Element::where('part_id', $part_id)->where('group', $group)->where('order', $new_order_number)->firstOrFail();
+            $other_element_id = $sql_other_element->id;
+    
+            //! UPDATE THIS ELEMENT ORDER NUMBER
+            $element = Element::findOrFail($element_id);
+            $old_order_number = $element->order;
+            $element->order = $new_order_number;
+            $element->save();
+    
+            //! UPDATE OTHERS ELEMENT IN THE SAME GROUP AND SAME PART WITH OLD ORDER NUMBER
+            $other_element = Element::findOrFail($other_element_id);
+            $other_element->order = $old_order_number;
+            $other_element->save();
+        } catch (Exception $e) {
+
+        }
+
     }
 
     public function delete($element_id)

@@ -82,7 +82,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::delete('element/{element_id}', [ElementController::class, 'delete']);
         Route::post('element', [ElementController::class, 'store']);
         Route::put('element/{group_id}', [ElementController::class, 'update']);
-        Route::put('order/element/{order_number}', [ElementController::class, 'updateOrder']);
+        Route::put('order/element', [ElementController::class, 'updateOrder']);
 
         Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

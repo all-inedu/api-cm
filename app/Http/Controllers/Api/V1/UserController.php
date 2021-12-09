@@ -31,8 +31,8 @@ class UserController extends Controller
         $data = array();
 
         for ($i = 0 ; $i < 7 ; $i++) {
-            $data['register'][] = User::where('role_id', 1)->where('created_at', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))))->count();
-            $data['login'][] = Login::where('created_at', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))))->count();
+            $data['register'][] = User::where('role_id', 1)->where('created_at', 'like', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))).'%')->count();
+            $data['login'][] = Login::where('created_at', 'like', date('Y-m-d', strtotime("+".$i." day", strtotime($start_date))).'%')->count();
 
             $data['day'][] = date('l', strtotime("+".$i." day", strtotime($start_date)));
             $data['date'][] = date('d-m-Y', strtotime("+".$i." day", strtotime($start_date)));
