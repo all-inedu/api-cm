@@ -31,10 +31,10 @@ class ElementController extends Controller
             $element = Element::findOrFail($element_id);
             $element->delete();
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Element has successfuly deleted']);
+        return response()->json(['success' => true, 'message' => 'Element has successfuly deleted'], 200);
     }
 
     public function getDetailElementById($element_id)
@@ -87,6 +87,10 @@ class ElementController extends Controller
 
         $group = Element::where('part_id', $request->part_id)->max('group');
         $group += 1;
+
+        if (isset($request->group)) {
+            $group = $request->group;
+        }
        
         DB::beginTransaction();
 
