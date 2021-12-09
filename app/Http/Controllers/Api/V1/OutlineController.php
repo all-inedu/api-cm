@@ -27,7 +27,20 @@ class OutlineController extends Controller
     {
         $module_id = $request->module_id;
 
-        $outline = DB::table('outlines');
+        // $outline = DB::table('outlines');
+
+        // if ( $module_id == null ) {
+        //     return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
+        // }
+
+        // if ( !is_numeric($module_id) ) {
+        //     return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
+        // }
+
+        // $outline = $outline->where('module_id', $module_id)->get();
+
+
+        $outline = DB::table('parts');
 
         if ( $module_id == null ) {
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
@@ -37,7 +50,11 @@ class OutlineController extends Controller
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
         }
 
-        $outline = $outline->where('module_id', $module_id)->get();
+        $outline = $outline
+                    ->selectRaw('outlines.*, COUNT(*) as jumlah_part')
+                    ->join('outlines', 'outlines.id', '=', 'parts.outline_id')
+                    ->where('outlines.module_id', $module_id)->groupBy('parts.outline_id')->get();
+
 
         // $collection = collect($outline);
         // $grouped = $collection->groupBy('section_id');
