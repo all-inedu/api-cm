@@ -25,6 +25,11 @@ class ElementController extends Controller
         $this->maxSizeOfUploadedImage = RouteServiceProvider::MAX_SIZE_OF_UPLOADED_IMAGE;
     }
 
+    public function updateOrder($order_number)
+    {
+        
+    }
+
     public function delete($element_id)
     {
         try {
