@@ -22,8 +22,17 @@ class PartController extends Controller
         return compact('part');
     }
 
-    public function list(Request $request)
+    public function list(Request $request) //by outline id
     {
+
+        $part = DB::table('parts')
+                ->selectRaw('parts.*, COUNT(CASE WHEN elements.id IS NOT NULL THEN FALSE END) as total_element')
+                ->leftJoin('elements', 'elements.part_id', '=', 'parts.id')
+                ->where('parts.outline_id', $request->outline_id)
+                ->orderBy('created_at', 'asc')
+                ->groupBy('elements.part_id')->get();
+        return $part;
+
         $outline_id = $request->outline_id;
         switch ($outline_id)
         {
