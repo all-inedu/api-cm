@@ -45,7 +45,7 @@ class ElementController extends Controller
 
     public function list($part_id)
     {
-        $raw = Element::where('part_id', $part_id)->get();
+        $raw = Element::where('part_id', $part_id)->orderBy('order', 'asc')->get();
         $element = array();
         // return compact('element');
         foreach ($raw as $data) {
