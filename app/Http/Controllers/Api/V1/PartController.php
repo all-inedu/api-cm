@@ -29,6 +29,7 @@ class PartController extends Controller
         switch ($outline_id)
         {
             case "all":
+                // NOT USED
                 return Part::getQuery()->orderBy('created_at', 'asc')->get();
                 break;
             

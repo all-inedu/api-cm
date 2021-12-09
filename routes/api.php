@@ -48,6 +48,10 @@ Route::group(['prefix' => 'v1'], function() {
     Route::middleware(['cors'])->group(function() {
     // Route::group(['middleware' => ['jwt.verify']], function () {
 
+        //* DASHBOARD *//
+        Route::get('count/user', [UserController::class, 'countUserRegistered']);
+        Route::get('count/module/{status}', [ModuleController::class, 'countModuleByStatus']);
+
         //* Select User *//
         Route::get('user/{id?}', [UserController::class, 'getDataUser']);
 

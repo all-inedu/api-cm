@@ -23,7 +23,7 @@ class ModuleSeeder extends Seeder
                 'category_id' => 39,
                 'price'       => 0,
                 'thumbnail'   => null,
-                'status'      => 1,
+                'status'      => 0,
                 'progress'    => 0,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now()
@@ -34,7 +34,7 @@ class ModuleSeeder extends Seeder
                 'category_id' => 21,
                 'price'       => 0,
                 'thumbnail'   => null,
-                'status'      => 1,
+                'status'      => 0,
                 'progress'    => 0,
                 'created_at'  => Carbon::now(),
                 'updated_at'  => Carbon::now()

@@ -21,6 +21,11 @@ class UserController extends Controller
 
         $this->paginationStudent = RouteServiceProvider::PAGINATION_PAGE_STUDENT;
     }
+
+    public function countUserRegistered()
+    {
+        return User::count();
+    }
     
     public function getDataUser(Request $request)
     {

@@ -28,6 +28,11 @@ class ModuleController extends Controller
         $this->paginationModule = RouteServiceProvider::PAGINATION_PAGE_MODULE;
     }
 
+    public function countModuleByStatus($status) 
+    {
+        return Module::where('status', $status)->get();
+    }
+
     public function deactivateActivate(Request $request, $module_id)
     {
         $status = $request->status;
