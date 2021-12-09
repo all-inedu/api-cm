@@ -22,6 +22,19 @@ class UserController extends Controller
         $this->paginationStudent = RouteServiceProvider::PAGINATION_PAGE_STUDENT;
     }
 
+    public function countUserWeekly()
+    {
+        // echo $date = date("Y-m-d",strtotime('monday this week')).' To '.date("Y-m-d",strtotime("sunday this week"));    
+        $start_date = date("Y-m-d",strtotime('monday this week'));
+        $end_date = date("Y-m-d",strtotime("sunday this week"));
+
+        $user = User::where('role_id', 1)->whereBetween('created_at', [$start_date, $end_date])->count();
+
+        return array(
+            'user' => $user
+        );
+    }
+
     public function countUserRegistered()
     {
         return User::where('role_id', '=', 1)->count();

@@ -85,11 +85,17 @@ class ElementController extends Controller
             return response()->json(['success' => false, 'error' => $validator->errors()], 401);
         }
 
+        //! GET MAX NUMBER GROUP
         $group = Element::where('part_id', $request->part_id)->max('group');
         $group += 1;
 
+        $order = null;
         if (isset($request->group)) {
             $group = $request->group;
+
+            //! GET MAX ORDER ELEMENT
+            $order = Element::where('part_id', $request->part_id)->max('order');
+            $order += 1;
         }
        
         DB::beginTransaction();
@@ -97,6 +103,10 @@ class ElementController extends Controller
         try 
         {
             $i = 1;
+            if ($order != null) {
+                $i = $order;
+            }
+            
             $requestData = $request->data;
             foreach ($requestData as $data)
             {

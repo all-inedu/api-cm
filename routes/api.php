@@ -50,6 +50,7 @@ Route::group(['prefix' => 'v1'], function() {
 
         //* DASHBOARD *//
         Route::get('count/user', [UserController::class, 'countUserRegistered']);
+        Route::get('count/user/weekly', [UserController::class, 'countUserWeekly']);
         Route::get('count/module', [ModuleController::class, 'countModuleByStatus']);
 
         //* Select User *//
