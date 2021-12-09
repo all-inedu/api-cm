@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function countUserRegistered()
     {
-        return User::count();
+        return User::where('role_id', '=', 1)->count();
     }
     
     public function getDataUser(Request $request)
