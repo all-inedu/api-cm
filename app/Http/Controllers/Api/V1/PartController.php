@@ -35,11 +35,9 @@ class PartController extends Controller
             
             case (is_numeric($outline_id) && $outline_id != 0):
                 $part = DB::table('parts')
-                    ->selectRaw('parts.*, COUNT(CASE WHEN elements.id IS NOT NULL THEN FALSE END) as total_element')
-                    ->leftJoin('elements', 'elements.part_id', '=', 'parts.id')
-                    ->where('parts.outline_id', $request->outline_id)
-                    ->orderBy('created_at', 'asc')
-                    ->groupBy('elements.part_id')->get();
+                    ->selectRaw('*, (select count(*) from elements where part_id = parts.id) as total_element')
+                    ->where('outline_id', $request->outline_id)
+                    ->orderBy('created_at', 'asc')->get();
                 return compact('part');
                 break;
         }

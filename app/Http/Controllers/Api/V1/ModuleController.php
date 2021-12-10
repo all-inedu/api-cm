@@ -55,7 +55,7 @@ class ModuleController extends Controller
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
 
-        return response()->json(['success' => true, 'data' => $module]);
+        return response()->json(['success' => true, 'message' => 'Module has successfuly updated'], 200);
     }
 
     public function getDataModule(Request $request)
@@ -122,7 +122,8 @@ class ModuleController extends Controller
         $drafted_module   = Module::where('status', 0)->count();  //! 0 = Draft
         $published_module = Module::where('status', 1)->count();  //! 1 = Published
         $inactive_module  = Module::where('status', 2)->count();   //! 2 = Inactive
-        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')], 200);
+        $locked_module    = Module::where('status', 3)->count();  //! 3 = Locked
+        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module', 'locked_module')], 200);
     }
 
     public function findModuleByName(Request $request)
@@ -145,15 +146,16 @@ class ModuleController extends Controller
             $drafted_module   = Module::where('module_name', 'like', '%'.$keyword.'%')->where('status', 0)->count();  //! 0 = Draft
             $published_module = Module::where('module_name', 'like', '%'.$keyword.'%')->where('status', 1)->count();  //! 1 = Published
             $inactive_module  = Module::where('module_name', 'like', '%'.$keyword.'%')->where('status', 2)->count();   //! 2 = Inactive
+            $locked_module    = Module::where('module_name', 'like', '%'.$keyword.'%')->where('status', 3)->count();   //! 3 = Locked
 
-            return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')]);
+            return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module', 'locked_module')]);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Invalid Query'], 400);
         }
         
-        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')]);
+        return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module', 'locked_module')]);
 
     }
     
@@ -172,7 +174,8 @@ class ModuleController extends Controller
             $drafted_module   = Module::where('status', 0)->count();  //! 0 = Draft
             $published_module = Module::where('status', 1)->count();  //! 1 = Published
             $inactive_module  = Module::where('status', 2)->count();   //! 2 = Inactive
-            return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module')], 200);
+            $locked_module    = Module::where('status', 3)->count();  //! 3 = Locked
+            return response()->json(['success' => true, 'data' => compact('module', 'drafted_module', 'published_module', 'inactive_module', 'locked_module')], 200);
         }
 
         if (!is_numeric($id)) {

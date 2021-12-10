@@ -32,8 +32,8 @@ class ElementController extends Controller
         try {
             $element_id       = $request->element_id;
             $part_id          = $request->part_id;
-            $group            = $request->part_id;
-            $new_order_number = $request->order;
+            $group            = $request->group;
+            $new_order_number = $request->new_order;
     
             //! FIND THE OLD ELEMENT ID WITH REQUESTED ORDER NUMBER 
             $sql_other_element = Element::where('part_id', $part_id)->where('group', $group)->where('order', $new_order_number)->firstOrFail();
@@ -54,7 +54,7 @@ class ElementController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
         }
 
         return response()->json(['success' => true, 'message' => 'Element order has successfuly updated'], 200);
