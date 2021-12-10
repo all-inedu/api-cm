@@ -25,6 +25,7 @@ class CreateModulesTable extends Migration
             $table->text('thumbnail')->nullable();
             $table->tinyInteger('status');
             $table->tinyInteger('progress')->default(0);
+            $table->string('slug');
             $table->timestamps();
         });
     }

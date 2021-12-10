@@ -23,7 +23,8 @@ class Module extends Model
         'price',
         'thumbnail',
         'status',
-        'progress'
+        'progress',
+        'slug'
     ];
 
     public function categories()

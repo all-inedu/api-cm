@@ -16,6 +16,7 @@ use PhpParser\Node\Stmt\Switch_;
 use App\Models\Outline;
 use App\Models\Part;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 use function PHPSTORM_META\type;
 
@@ -225,7 +226,8 @@ class ModuleController extends Controller
                 'price'       => $request->price,
                 'thumbnail'   => null,
                 'status'      => 0,
-                'progress'    => 1 //! UPDATE PROGRESS
+                'progress'    => 1, //! UPDATE PROGRESS
+                'slug'        => Str::slug($request->module_name, '-')
             ];
 
 
@@ -291,6 +293,7 @@ class ModuleController extends Controller
             $module->desc        = $module_data->desc;
             $module->category_id = $module_data->category_id;
             $module->price       = $module_data->price;
+            $module->slug        = Str::slug($module_data->module_name, '-');
             $module->save();
     
             $file = $fileName = $destinationPath = null;
