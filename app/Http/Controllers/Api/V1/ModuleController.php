@@ -95,18 +95,26 @@ class ModuleController extends Controller
     public function deactivateActivate(Request $request, $module_id)
     {
         $status = $request->status;
+        DB::beginTransaction();
 
         try 
         {
             $module = Module::findOrFail($module_id);
+            if ($status == 1) {
+                $module->progress = 5;
+            }
             $module->status = $status;
             $module->save();
         } 
         catch (Exception $e) 
         {
+            DB::rollBack();
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
         }
+
+        DB::commit();
+        
 
         return response()->json(['success' => true, 'message' => 'Module has successfuly updated'], 200);
     }

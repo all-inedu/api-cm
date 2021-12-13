@@ -16,28 +16,28 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 3 ; $i < 120 ; $i++) {
-            $array[] = array(
-                'first_name' => 'user',
-                'last_name' => 'dummy '.$i,
-                'birthday' => '1995-10-10',
-                'phone_number' => '08122366457',
-                'role_id' => 1,
-                'email' => 'student_dummy_'.$i.'@all-inedu.com', //TODO diganti sesuai real email student dummy 
-                'email_verified_at' => Carbon::now(),
-                'password' => Hash::make('12345678'),
-                'address' => null,
-                'total_exp' => 0,
-                'profile_picture' => null,
-                'imported_from' => null,
-                'ext_id' => null,
-                'status' => true,
-                'remember_token' => null,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'is_verified' => ( ($i > 5) && ($i < 8) ) ? 0 : 1
-            );
-        }
+        // for ($i = 3 ; $i < 120 ; $i++) {
+        //     $array[] = array(
+        //         'first_name' => 'user',
+        //         'last_name' => 'dummy '.$i,
+        //         'birthday' => '1995-10-10',
+        //         'phone_number' => '08122366457',
+        //         'role_id' => 1,
+        //         'email' => 'student_dummy_'.$i.'@all-inedu.com', //TODO diganti sesuai real email student dummy 
+        //         'email_verified_at' => Carbon::now(),
+        //         'password' => Hash::make('12345678'),
+        //         'address' => null,
+        //         'total_exp' => 0,
+        //         'profile_picture' => null,
+        //         'imported_from' => null,
+        //         'ext_id' => null,
+        //         'status' => true,
+        //         'remember_token' => null,
+        //         'created_at' => Carbon::now(),
+        //         'updated_at' => Carbon::now(),
+        //         'is_verified' => ( ($i > 5) && ($i < 8) ) ? 0 : 1
+        //     );
+        // }
 
         $data = array(
             array(
@@ -102,7 +102,7 @@ class UserSeeder extends Seeder
             )
         );
 
-        $data = array_merge($data, $array);
+        // $data = array_merge($data, $array);
 
         DB::table('users')->insert($data);
     }
