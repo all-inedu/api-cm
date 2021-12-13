@@ -10,6 +10,6 @@ class CategoryController extends Controller
 {
     public function list(Request $request)
     {
-        return Category::orderBy('name', 'asc')->all();
+        return Category::orderBy('name', 'asc')->get();
     }
 }
