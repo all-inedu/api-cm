@@ -116,7 +116,7 @@ class ModuleController extends Controller
         DB::commit();
         
 
-        return response()->json(['success' => true, 'data' => array('progress' => $module->progress), 'message' => 'Module has successfuly updated'], 200);
+        return response()->json(['success' => true, 'data' => array('progress' => $module->progress, 'status' => $module->status), 'message' => 'Module has successfuly updated'], 200);
     }
 
     public function getDataModule(Request $request)
