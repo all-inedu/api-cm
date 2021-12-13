@@ -259,7 +259,7 @@ class ElementController extends Controller
         if ($element_id != '') {
             $message = 'Element has successfully updated';
         }
-        return response()->json(['success' => true, 'message' => $message], 201);
+        return response()->json(['success' => true, 'data' => array('progress' => $module->progress), 'message' => $message], 201);
     }
 
     private function updateImage($postData)
