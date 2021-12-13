@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return abort(404);
+
+    // return view('index');
 });
 
 Route::get('/about-us', function () {

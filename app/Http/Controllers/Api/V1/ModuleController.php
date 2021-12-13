@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Element;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Module;
@@ -15,6 +16,7 @@ use Illuminate\Database\QueryException;
 use PhpParser\Node\Stmt\Switch_;
 use App\Models\Outline;
 use App\Models\Part;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -27,6 +29,57 @@ class ModuleController extends Controller
     public function __construct() {
 
         $this->paginationModule = RouteServiceProvider::PAGINATION_PAGE_MODULE;
+    }
+
+    public function preview($module_id)
+    {
+        $data = array();
+        $module = Module::select('modules.*', 'categories.name as category_name')
+                        ->join('categories', 'categories.id', '=', 'modules.category_id')->where('modules.id', $module_id)->get();
+        foreach ($module as $item) {
+            $data['module'] = array(
+                'id'            => $item->id,
+                'module_name'   => $item->module_name,
+                'desc'          => $item->desc,
+                'category_name' => $item->category_name,
+                'price'         => $item->price,
+                'thumbnail'     => $item->thumbnail,
+                'status'        => $item->status,
+                'progress'      => $item->progress,
+                'slug'          => $item->slug
+            );
+
+            $outline_index = 0;
+            $outline = Outline::select('outlines.*', 'sections.name as section_name')->where('module_id', $module_id)
+                    ->join('sections', 'sections.id', '=', 'outlines.section_id')->get();
+            foreach ($outline as $outline_item) {
+                $data['module']['outline'][] = array(
+                    'id' => $outline_item->id,
+                    'section_name' => $outline_item->section_name,
+                    'name' => $outline_item->name,
+                    'desc' => $outline_item->desc
+                );
+
+                $part_index = 0;
+                $part = Part::where('outline_id', $outline_item->id)->get();
+                foreach ($part as $part_item) {
+                    $data['module']['outline'][$outline_index]['part'][] = array(
+                        'id' => $part_item->id,
+                        'title' => $part_item->title
+                    );
+
+                    $element = Element::where('part_id', $part_item->id)->count();
+                    $data['module']['outline'][$outline_index]['part'][$part_index]['total_element'] = $element;
+
+                $part_index++;
+                }
+
+            $outline_index++;
+            }
+
+        }
+
+        return $data;
     }
 
     public function countModuleByStatus() 

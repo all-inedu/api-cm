@@ -130,7 +130,7 @@ class ElementController extends Controller
             $group = $request->group;
 
             //! GET MAX ORDER ELEMENT
-            $order = Element::where('part_id', $request->part_id)->max('order');
+            $order = Element::where('part_id', $request->part_id)->where('group', $group)->max('order');
             $order += 1;
         }
        
