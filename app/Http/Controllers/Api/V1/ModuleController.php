@@ -51,7 +51,7 @@ class ModuleController extends Controller
 
             $outline_index = 0;
             $outline = Outline::select('outlines.*', 'sections.name as section_name')->where('module_id', $module_id)
-                    ->join('sections', 'sections.id', '=', 'outlines.section_id')->get();
+                    ->join('sections', 'sections.id', '=', 'outlines.section_id')->orderBy('created_at', 'asc')->get();
             foreach ($outline as $outline_item) {
                 $data['module']['outline'][] = array(
                     'id' => $outline_item->id,
@@ -61,7 +61,7 @@ class ModuleController extends Controller
                 );
 
                 $part_index = 0;
-                $part = Part::where('outline_id', $outline_item->id)->get();
+                $part = Part::where('outline_id', $outline_item->id)->orderBy('created_at', 'asc')->get();
                 foreach ($part as $part_item) {
                     $data['module']['outline'][$outline_index]['part'][] = array(
                         'id' => $part_item->id,

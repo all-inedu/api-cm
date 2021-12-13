@@ -26,7 +26,7 @@ class OutlineController extends Controller
     public function getListOutlineByModule(Request $request)
     {
         $module_id = $request->module_id;
-        $outline = DB::table('parts');
+        $outline = DB::table('outlines');
 
         if ( $module_id == null ) {
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
@@ -36,10 +36,11 @@ class OutlineController extends Controller
             return response()->json(['success' => false, 'error' => 'Invalid parameter'], 400);
         }
 
+
         $outline = $outline
-                    ->selectRaw('outlines.*, COUNT(*) as total_part')
-                    ->join('outlines', 'outlines.id', '=', 'parts.outline_id')
-                    ->where('outlines.module_id', $module_id)->groupBy('parts.outline_id')->get();
+                    ->selectRaw('*, (SELECT COUNT(*) FROM parts WHERE outline_id = outlines.id) as total_part')
+                    ->where('module_id', $module_id)
+                    ->orderBy('created_at', 'asc')->get();
 
         return response()->json(['success' => true, 'data' => $outline], 200);
         
