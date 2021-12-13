@@ -45,8 +45,8 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware(['cors'])->group(function() {
-    // Route::group(['middleware' => ['jwt.verify']], function () {
+    // Route::middleware(['cors'])->group(function() {
+    Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
 
         //* DASHBOARD *//
         Route::get('count/user', [UserController::class, 'countUserRegistered']);
