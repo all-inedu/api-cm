@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Str;
 
 class ElementController extends Controller
 {
@@ -436,7 +437,7 @@ class ElementController extends Controller
         $file            = $postData['file'];
         $extension       = $file->getClientOriginalExtension();
         $size            = $file->getSize();
-        $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').".".$extension ;
+        $fileName        = 'uploaded_file/module/'.$module_id.'/'.date('dmYHis').Str::random(5).".".$extension ;
         $destinationPath = public_path().'/uploaded_file/module/'.$module_id.'/';
 
         if (file_exists(public_path($fileName))) {
