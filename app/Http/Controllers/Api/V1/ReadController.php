@@ -41,7 +41,7 @@ class ReadController extends Controller
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['success' => false, 'error' => 'Bad Request'], 400);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
         }
 
         return response()->json(['success' => true, 'data' => compact('last_reads')], 201);

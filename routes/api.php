@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ElementController;
 use App\Http\Controllers\Api\V1\ListenController;
-use App\Http\Controllers\ReadController;
+use App\Http\Controllers\Api\V1\ReadController;
 use App\Models\Module;
 use App\Models\Outline;
 
@@ -34,6 +34,7 @@ use App\Models\Outline;
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 Route::group(['prefix' => 'v1'], function() {
+
     //! Verification
     Route::post('email/verification-notification', [VerificationController::class, 'verificationNotification'])->middleware(['auth:api'])->name('verification.send');
     Route::get('user/verify/{verification_code}', [VerificationController::class, 'verifyUser'])->name('user.verify');
@@ -49,6 +50,9 @@ Route::group(['prefix' => 'v1'], function() {
 
     Route::middleware(['cors'])->group(function() {
     // Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
+        
+        //* CHECK TOKEN *//
+        Route::post('check/token', [AuthController::class, 'checkToken']);
 
         //* ADMIN DASHBOARD *//
         Route::get('count/user', [UserController::class, 'countUserRegistered']);
@@ -92,6 +96,8 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::post('read', [ReadController::class, 'read']);
         Route::get('listen/module/{slug}', [ListenController::class, 'getModuleBySlug']);
+        Route::get('listen/section/{slug}', [ListenController::class, 'getSectionDataBySlug']);
+        Route::get('listen/part/outline/{outline_id}', [ListenController::class, 'getPartByOutlineId']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

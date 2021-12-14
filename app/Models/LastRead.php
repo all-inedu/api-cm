@@ -9,7 +9,7 @@ class LastRead extends Model
 {
     use HasFactory;
 
-    protected $table = 'lastreads';
+    protected $table = 'last_reads';
 
     /**
      * The attributes that are mass assignable.
