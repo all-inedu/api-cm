@@ -28,4 +28,9 @@ class Part extends Model
     {
         return $this->hasMany(Element::class, 'part_id', 'id');
     }
+
+    public function lastreads()
+    {
+        return $this->hasMany(LastRead::class, 'part_id', 'id');
+    }
 }

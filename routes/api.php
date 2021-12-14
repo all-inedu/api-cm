@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\V1\VerificationController;
 use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ElementController;
+use App\Http\Controllers\Api\V1\ListenController;
+use App\Http\Controllers\ReadController;
 use App\Models\Module;
 use App\Models\Outline;
 
@@ -45,10 +47,10 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    // Route::middleware(['cors'])->group(function() {
-    Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
+    Route::middleware(['cors'])->group(function() {
+    // Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
 
-        //* DASHBOARD *//
+        //* ADMIN DASHBOARD *//
         Route::get('count/user', [UserController::class, 'countUserRegistered']);
         Route::get('count/user/weekly', [UserController::class, 'countUserWeekly']);
         Route::get('count/module', [ModuleController::class, 'countModuleByStatus']);
@@ -85,6 +87,11 @@ Route::group(['prefix' => 'v1'], function() {
         Route::put('order/element', [ElementController::class, 'updateOrder']);
 
         Route::get('preview/{module_id}', [ModuleController::class, 'preview']);
+
+        //* USER SIDE **//
+
+        Route::post('read', [ReadController::class, 'read']);
+        Route::get('listen/module/{slug}', [ListenController::class, 'getModuleBySlug']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

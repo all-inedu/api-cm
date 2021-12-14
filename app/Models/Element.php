@@ -36,4 +36,9 @@ class Element extends Model
     {
         return $this->hasMany(ElementDetail::class, 'element_id', 'id');
     }
+
+    public function lastreads()
+    {
+        return $this->hasMany(LastRead::class, 'element_id', 'id');
+    }
 }

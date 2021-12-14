@@ -36,4 +36,9 @@ class Module extends Model
     {
         return $this->hasMany(Outline::class, 'module_id', 'id');
     }
+
+    public function lastreads()
+    {
+        return $this->hasMany(LastRead::class, 'module_id', 'id');
+    }
 }
