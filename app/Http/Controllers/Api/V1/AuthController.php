@@ -198,5 +198,6 @@ class AuthController extends Controller
                 return response()->json(['status' => 'Authorization Token not found']);
             }
         }
+        return response()->json(['status' => 'Token is valid']);
     }
 }
