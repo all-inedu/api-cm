@@ -98,6 +98,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('listen/module/{slug}', [ListenController::class, 'getModuleBySlug']);
         Route::get('listen/section/{slug}', [ListenController::class, 'getSectionDataBySlug']);
         Route::get('listen/part/outline/{outline_id}', [ListenController::class, 'getPartByOutlineId']);
+        Route::get('listen/element/{part_id}/{group_id?}', [ListenController::class, 'getModuleContent']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

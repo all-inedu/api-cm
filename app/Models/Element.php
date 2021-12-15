@@ -9,6 +9,8 @@ class Element extends Model
 {
     use HasFactory;
 
+    protected $table = 'elements';
+
     /**
      * The attributes that are mass assignable.
      *

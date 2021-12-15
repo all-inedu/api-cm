@@ -66,6 +66,28 @@ class ElementController extends Controller
     {
         try {
             $element = Element::findOrFail($element_id);
+            $part_id = $element->part_id;
+            $group = $element->group;
+
+            $query = Element::where('part_id', $part_id)->where('group', $group);
+            $max_order_number = $query->max('order');
+            $order_number = $element->order;
+
+            if ( $order_number < $max_order_number ) {
+                //! GET DATA ELEMENT THAT HAS ORDER NUMBER BIGGER THAN DELETED ELEMENT ORDER NUMBER 
+                $query_element = $query->where('order', '>', $order_number)->get();
+                foreach ($query_element as $data) {
+                    $other_element_id = $data->id;
+                    $other_element_order_number = $data->order;
+                    $minus_order_number = $other_element_order_number - 1;
+
+                    //! UPDATE OTHERS ORDER NUMBER
+                    $other = Element::findOrFail($other_element_id);
+                    $other->order = $minus_order_number;
+                    $other->save();
+                }
+            }
+
             $element->delete();
         } catch (Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 400);
