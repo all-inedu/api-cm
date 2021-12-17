@@ -17,12 +17,21 @@ use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Models\Login;
+use App\Providers\RouteServiceProvider;
 
 class AuthController extends Controller
 {
 
+    private $success_logout_msg;
+    private $failed_logout_msg;
+    private $failed_login_msg;
+
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register', 'checkToken']]);
+
+        $this->success_logout_msg = RouteServiceProvider::SUCCESS_LOGOUT_MSG;
+        $this->failed_logout_msg = RouteServiceProvider::FAILED_LOGOUT_MSG;
+        $this->failed_login_msg = RouteServiceProvider::FAILED_LOGIN_MSG;
     }
 
     public function login(Request $request)
@@ -53,7 +62,7 @@ class AuthController extends Controller
             }
         } catch (JWTException $e) {
             // something went wrong while attempting to encode the token
-            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
+            return response()->json(['success' => false, 'error' => $this->failed_login_msg], 500);
         }
 
         $currentUser = Auth::user();
@@ -78,10 +87,10 @@ class AuthController extends Controller
         
         try {
             JWTAuth::invalidate($request->input('token'));
-            return response()->json(['success' => true, 'message'=> "You have successfully logged out."]);
+            return response()->json(['success' => true, 'message'=> $this->success_logout_msg]);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['success' => false, 'error' => 'Failed to logout, please try again.'], 500);
+            return response()->json(['success' => false, 'error' => $this->failed_logout_msg], 500);
         }
     }
 

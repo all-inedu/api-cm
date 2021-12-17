@@ -28,10 +28,8 @@ class CreateLastReadsTable extends Migration
             $table->unsignedBigInteger('part_id');
             $table->foreign('part_id')->references('id')->on('parts')->onUpdate('cascade')->onDelete('cascade');
             
-            //! TODO - add foreign key to 'last_reads'
-            $table->unsignedBigInteger('element_id');
-            $table->foreign('element_id')->references('id')->on('elements')->onUpdate('cascade')->onDelete('cascade');
-            
+            $table->integer('group');
+
             $table->timestamps();
         });
     }

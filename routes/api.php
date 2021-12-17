@@ -48,8 +48,8 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::middleware(['cors'])->group(function() {
-    // Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
+    // Route::middleware(['cors'])->group(function() {
+    Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
         
         //* CHECK TOKEN *//
         Route::post('check/token', [AuthController::class, 'checkToken']);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuestionAnswersTable extends Migration
+class CreateAnswersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,20 @@ class CreateQuestionAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_answers', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->id();
-            //! TODO - add foreign key to 'roles'
-            $table->unsignedBigInteger('element_detail_id');
+            //! TODO - add foreign key to 'answers'
+            $table->unsignedBigInteger('element_id');
+            $table->foreign('element_id')->references('id')->on('elements')->onUpdate('cascade')->onDelete('cascade');
+            //! TODO - add foreign key to 'answers'
+            $table->unsignedBigInteger('element_detail_id')->nullable();
             $table->foreign('element_detail_id')->references('id')->on('element_details')->onUpdate('cascade')->onDelete('cascade');
-            //! TODO - add foreign key to 'roles'
+            //! TODO - add foreign key to 'answers'
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->string('answer')->nullable();
+            $table->text('file_path')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +38,6 @@ class CreateQuestionAnswersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_answers');
+        Schema::dropIfExists('answers');
     }
 }

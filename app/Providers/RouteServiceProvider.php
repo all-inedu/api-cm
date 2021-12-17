@@ -19,11 +19,19 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
-    /* NEW VARIABLES */
+    /* PAGINATION */
     public const PAGINATION_PAGE_STUDENT = 9;
     public const PAGINATION_PAGE_MODULE = 10;
 
+    /* IMAGE CONFIGURATION */
     public const MAX_SIZE_OF_UPLOADED_IMAGE = 1048576;
+    public const MAX_SIZE_OF_UPLOADED_FILE = 20000000;
+
+    /* MESSAGE */
+    public const FAILED_LOGIN_MSG = 'Failed to login, please try again.';
+
+    public const SUCCESS_LOGOUT_MSG = 'You have successfully logged out.';
+    public const FAILED_LOGOUT_MSG = 'Failed to logout, please try again.';
 
     /**
      * The controller namespace for the application.

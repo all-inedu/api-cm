@@ -20,7 +20,7 @@ class LastRead extends Model
         'user_id',
         'module_id',
         'part_id',
-        'element_id'
+        'group'
     ];
 
     public function users()
@@ -38,8 +38,4 @@ class LastRead extends Model
         return $this->belongsTo(Part::class, 'part_id', 'id');
     }
 
-    public function elements()
-    {
-        return $this->belongsTo(Element::class, 'element_id', 'id');
-    }
 }
