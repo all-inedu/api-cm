@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmailReset;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -12,6 +13,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Psy\CodeCleaner\ValidConstructorPass;
 use App\Models\Login;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use DateTime;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -51,6 +57,7 @@ class UserController extends Controller
 
         $id = $request->id;
         try {
+
             if (is_numeric($id)) {
 
                 $user = DB::table('users')->where('role_id', 1)->where('id', $request->id)->get();
@@ -134,4 +141,5 @@ class UserController extends Controller
 
         return response()->json(compact('user'));
     }
+
 }

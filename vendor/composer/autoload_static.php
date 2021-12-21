@@ -572,6 +572,7 @@ class ComposerStaticInit4fce6d2748461113b40ce74b1ffda471
         'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
         'App\\Models\\Element' => __DIR__ . '/../..' . '/app/Models/Element.php',
         'App\\Models\\ElementDetail' => __DIR__ . '/../..' . '/app/Models/ElementDetail.php',
+        'App\\Models\\EmailReset' => __DIR__ . '/../..' . '/app/Models/EmailReset.php',
         'App\\Models\\LastRead' => __DIR__ . '/../..' . '/app/Models/LastRead.php',
         'App\\Models\\Login' => __DIR__ . '/../..' . '/app/Models/Login.php',
         'App\\Models\\Module' => __DIR__ . '/../..' . '/app/Models/Module.php',

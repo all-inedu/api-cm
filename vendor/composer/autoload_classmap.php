@@ -35,6 +35,7 @@ return array(
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
     'App\\Models\\Element' => $baseDir . '/app/Models/Element.php',
     'App\\Models\\ElementDetail' => $baseDir . '/app/Models/ElementDetail.php',
+    'App\\Models\\EmailReset' => $baseDir . '/app/Models/EmailReset.php',
     'App\\Models\\LastRead' => $baseDir . '/app/Models/LastRead.php',
     'App\\Models\\Login' => $baseDir . '/app/Models/Login.php',
     'App\\Models\\Module' => $baseDir . '/app/Models/Module.php',

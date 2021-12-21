@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\ResetPasswordController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ElementController;
 use App\Http\Controllers\Api\V1\ListenController;
+use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ReadController;
 use App\Models\Module;
 use App\Models\Outline;
@@ -99,6 +100,15 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('listen/section/{slug}', [ListenController::class, 'getSectionDataBySlug']);
         Route::get('listen/part/outline/{outline_id}', [ListenController::class, 'getPartByOutlineId']);
         Route::get('listen/element/{part_id}/{group_id?}', [ListenController::class, 'getModuleContent']);
+
+        Route::get('profile', [ProfileController::class, 'profileUser']);
+        Route::post('profile', [ProfileController::class, 'updateProfileUser']);
+        Route::post('request/email-change', [ProfileController::class, 'requestChangeEmail']);
+        Route::get('change/mail/{verification_code}', [ProfileController::class, 'verifyAndChangeEmail']);
+        Route::post('change/password', [ProfileController::class, 'changePassword']);
+
+        Route::get('act/latest/read', [ListenController::class, 'lastRead']);
+        Route::get('act/history/progress', [ListenController::class, 'progressHistory']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });
