@@ -39,13 +39,13 @@ class ListenController extends Controller
 
     public function lastRead()
     {
-        $this->algoLastRead($this->user_id);
+        return $this->algoLastRead($this->user_id);
     }
 
     public function algoLastRead($id)
     {
         $index = 0;
-        $array[] = null;
+        $array = array();
 
         $last_read = LastRead::where('user_id', $id)->groupBy('module_id')->select('module_id')->orderBy('created_at', 'desc')->get();
         if (empty($last_read)) {
