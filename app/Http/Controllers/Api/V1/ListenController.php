@@ -33,13 +33,21 @@ class ListenController extends Controller
         }
     }
 
+    //************************* */
+    //**** DASHBOARD USER *******/
+    //************************* */
+
     public function lastRead()
+    {
+        $this->algoLastRead($this->user_id);
+    }
+
+    public function algoLastRead($id)
     {
         $index = 0;
         $array[] = null;
-        
 
-        $last_read = LastRead::where('user_id', $this->user_id)->groupBy('module_id')->select('module_id')->orderBy('created_at', 'desc')->get();
+        $last_read = LastRead::where('user_id', $id)->groupBy('module_id')->select('module_id')->orderBy('created_at', 'desc')->get();
         if (empty($last_read)) {
             return response()->json(['success' => true], 200);
         }
@@ -49,7 +57,7 @@ class ListenController extends Controller
             //! cari part terakhir yg dibaca
             $query_latest_part = LastRead::join('parts', 'parts.id', '=', 'last_reads.part_id')
                                 ->join('outlines', 'outlines.id', '=', 'parts.outline_id')
-                                ->where('last_reads.user_id', $this->user_id)->where('last_reads.module_id', $read_module->module_id)
+                                ->where('last_reads.user_id', $id)->where('last_reads.module_id', $read_module->module_id)
                                 ->select(
                                     DB::raw('MAX(last_reads.part_id) as latest_part'), 
                                         'outlines.id', 'parts.title as part_name', 'outlines.name as outline_name',
@@ -83,14 +91,14 @@ class ListenController extends Controller
             $array[$index]['section_name'] = $get_latest->section_name;
             //// $array[$index]['current_group'] = $query->latest_group; 
 
-            $query_taken_date = DB::select('SELECT MIN(created_at) AS taken_date from last_reads WHERE user_id = '.$this->user_id.' AND module_id = '.$read_module->module_id);
+            $query_taken_date = DB::select('SELECT MIN(created_at) AS taken_date from last_reads WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id);
             $taken_date = !empty($query_taken_date) ? $query_taken_date[0]->taken_date : null;
             $array[$index]['taken_date'] = $taken_date;   
 
             $progress = DB::select('SELECT SUM(max_group) as total_page_read FROM 
                         (   
                             SELECT max(`group`) as max_group 
-                            FROM `last_reads` WHERE user_id = '.$this->user_id.' AND module_id = '.$read_module->module_id.'
+                            FROM `last_reads` WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id.'
                             GROUP BY part_id
                         ) t');
             $total_progress = !empty($progress) ? $progress[0]->total_page_read : 0;

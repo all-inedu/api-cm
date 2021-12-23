@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use DateTime;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
@@ -119,6 +120,11 @@ class UserController extends Controller
         }
 
         return response()->json(['success' => false, "error" => "Invalid parameter"]);
+    }
+
+    public function getUserProgress($id)
+    {
+        return app('App\Http\Controllers\Api\V1\ListenController')->algoLastRead($id);
     }
 
     public function getAuthenticatedUser()
