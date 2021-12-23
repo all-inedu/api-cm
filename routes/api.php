@@ -65,6 +65,7 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::post('filter/student', [UserController::class, 'filterUser']);
         Route::get('user/progress/{id}', [UserController::class, 'getUserProgress']);
+        Route::get('module/{slug}/answer/user/{id}', [UserController::class, 'getUserAnswer']);
 
         //* Module *//
         Route::get('module/{id?}', [ModuleController::class, 'list']);

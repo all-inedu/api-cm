@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use DateTime;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Module;
 
 class UserController extends Controller
 {
@@ -125,6 +126,25 @@ class UserController extends Controller
     public function getUserProgress($id)
     {
         return app('App\Http\Controllers\Api\V1\ListenController')->algoLastRead($id);
+    }
+
+    public function getUserAnswer($slug, $id)
+    {
+        $answer = Module::with([
+            'outlines' => function($query) use ($id) {
+                $query->withAndWhereHas('parts', function ($query2) use ($id) {
+                    $query2->withAndWhereHas('elements', function ($query3) use ($id) {
+                        // $query3->withAndWhereHas('elementdetails', function ($query4) {
+                            $query3->withAndWhereHas('answersdetails', function ($query5) use ($id) {
+                                $query5->where('user_id', $id);
+                            });
+                        // });
+                    });
+                });
+            }
+        ])->where('slug', $slug)->first();
+
+        return response()->json($answer);
     }
 
     public function getAuthenticatedUser()
