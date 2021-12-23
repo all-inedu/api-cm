@@ -18,7 +18,7 @@ class ModuleSeeder extends Seeder
         $data = 
         array(
             array(
-                'module_name' => 'Digital Marketing',
+                'module_name' => 'Dummy Module 1',
                 'desc'        => 'Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.',
                 'category_id' => 39,
                 'price'       => 0,
@@ -29,7 +29,18 @@ class ModuleSeeder extends Seeder
                 'updated_at'  => Carbon::now()
             ),
             array(
-                'module_name' => 'Data Scientist',
+                'module_name' => 'Dummy Module 2',
+                'desc'        => 'Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.',
+                'category_id' => 21,
+                'price'       => 0,
+                'thumbnail'   => null,
+                'status'      => 0,
+                'progress'    => 0,
+                'created_at'  => Carbon::now(),
+                'updated_at'  => Carbon::now()
+            ),
+            array(
+                'module_name' => 'Dummy Module 3',
                 'desc'        => 'Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Donec sollicitudin molestie malesuada. Vivamus suscipit tortor eget felis porttitor volutpat.',
                 'category_id' => 21,
                 'price'       => 0,

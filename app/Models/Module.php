@@ -42,4 +42,5 @@ class Module extends Model
         return $this->hasMany(LastRead::class, 'module_id', 'id');
     }
 
+
 }

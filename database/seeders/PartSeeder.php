@@ -17,11 +17,31 @@ class PartSeeder extends Seeder
         $data = array(
             array(
                 'outline_id' => 1,
-                'title' => 'This is Part A'
+                'title' => 'Part Dummy 1.a'
+            ),
+            array(
+                'outline_id' => 1,
+                'title' => 'Part Dummy 1.b'
             ),
             array(
                 'outline_id' => 2,
-                'title' => 'This is Part B'
+                'title' => 'Part Dummy 2'
+            ),
+            array(
+                'outline_id' => 3,
+                'title' => 'Part Dummy 3'
+            ),
+            array(
+                'outline_id' => 4,
+                'title' => 'Part Dummy 4'
+            ),
+            array(
+                'outline_id' => 5,
+                'title' => 'Part Dummy 5'
+            ),
+            array(
+                'outline_id' => 6,
+                'title' => 'Part Dummy 6'
             )
         );
 

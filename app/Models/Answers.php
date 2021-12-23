@@ -9,6 +9,8 @@ class Answers extends Model
 {
     use HasFactory;
 
+    protected $table = 'answers';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,4 +23,15 @@ class Answers extends Model
         'answer',
         'file_path'
     ];
+
+    public function elements()
+    {
+        return $this->belongsTo(Element::class, 'element_id', 'id');
+    }
+
+    public function scopeWithAndWhereHas($query, $relation, $constraint){
+        return $query->whereHas($relation, $constraint)
+                     ->with([$relation => $constraint]);
+    }
+
 }

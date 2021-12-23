@@ -50,7 +50,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::middleware(['cors'])->group(function() {
-    Route::group(['middleware' => ['jwt.verify', 'cors']], function () {
+    Route::group(['middleware' => ['jwt.verify', 'cors', 'throttle:40,10']], function () {
         
         //* CHECK TOKEN *//
         Route::post('check/token', [AuthController::class, 'checkToken']);
@@ -108,7 +108,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('change/password', [ProfileController::class, 'changePassword']);
 
         Route::get('act/latest/read', [ListenController::class, 'lastRead']);
-        Route::get('act/history/progress', [ListenController::class, 'progressHistory']);
+        Route::get('act/view/answer/{module_slug}', [ListenController::class, 'viewAnswer']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

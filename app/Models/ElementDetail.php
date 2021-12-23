@@ -26,4 +26,14 @@ class ElementDetail extends Model
     {
         return $this->belongsTo(Element::class, 'element_id', 'id');
     }
+
+    public function answers()
+    {
+        return $this->hasMany(Answers::class, 'element_id', 'id');
+    }
+
+    public function scopeWithAndWhereHas($query, $relation, $constraint){
+        return $query->whereHas($relation, $constraint)
+                     ->with([$relation => $constraint]);
+    }
 }
