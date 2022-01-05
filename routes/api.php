@@ -32,6 +32,10 @@ use App\Models\Outline;
 //     return $request->user();
 // });
 
+// Route::get('testmail', function() {
+//     return view('email.forgetPassword', ['token' => '1234', 'fullname' => 'manuel eric']);
+// });
+
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 Route::group(['prefix' => 'v1'], function() {

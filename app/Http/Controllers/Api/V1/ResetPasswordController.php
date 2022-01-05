@@ -30,6 +30,8 @@ class ResetPasswordController extends Controller
             $error_message = "Your email address was not found.";
             return response()->json(['success' => false, 'error' => ['email'=> $error_message]], 401);
         }
+        $first_name = $user->first_name;
+        $last_name = $user->last_name;
 
         try {
             $token = Str::random(64);
@@ -40,7 +42,7 @@ class ResetPasswordController extends Controller
                 'created_at' => Carbon::now()
                 ]);
 
-            Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+            Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $first_name.' '.$last_name], function($message) use($request){
                 $message->to($request->email);
                 $message->subject('Your Reset Password Link');
             });
