@@ -50,7 +50,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::middleware(['cors'])->group(function() {
-    Route::group(['middleware' => [ 'cors', 'throttle:40,10']], function () {
+    Route::group(['middleware' => ['jwt.verify', 'cors', 'throttle:40,10']], function () {
         
         //* CHECK TOKEN *//
         Route::post('check/token', [AuthController::class, 'checkToken']);
