@@ -255,7 +255,7 @@ class ModuleController extends Controller
 
         $validator = Validator::make($request->all(), [
             'module_name' => 'required|string|max:255',
-            'desc'        => 'required',
+            // 'desc'        => 'required',
             'category_id' => 'required|numeric|exists:categories,id',
             'price'       => 'required|numeric'
             // 'thumbnail'   => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'

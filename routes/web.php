@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\v1\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('testmail1', function(){
+    return view('email.forgetPassword', ['fullname' => 'aiueo', 'token' => 123]);
+});
+
+Route::get('testmail', function(){
+    $name = "eric";
+        $verification_code = 123;
+        $email = 'test@example.com';
+        $subject = 'aiueo';
+        Mail::send('email.forgetPassword', ['fullname' => $name, 'token' => $verification_code],
+                function($mail) use ($email, $name, $subject) {
+                    $mail->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
+                    $mail->to($email, $name);
+                    $mail->subject($subject);
+                });
+});
 
 Route::get('/', function () {
     return abort(404);

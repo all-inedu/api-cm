@@ -131,7 +131,7 @@ class ProfileController extends Controller
             $subject = "Email Change Verification";
             Mail::send('email.changeMailAddress', ['name' => $name, 'verification_code' => $verification_code],
                 function($mail) use ($new_email, $name, $subject) {
-                    $mail->from(getenv('FROM_EMAIL_ADDRESS'), "no-reply@all-inedu.com");
+                    $mail->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
                     $mail->to($new_email, $name);
                     $mail->subject($subject);
                 });
@@ -171,7 +171,7 @@ class ProfileController extends Controller
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
             'birthday'     => 'required|olderThan:14',
-            'phone_number' => 'required|max:25',
+            'phone_number' => 'required|min:10|max:25',
             'address'      => 'required'
         ]);
 

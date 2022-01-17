@@ -43,6 +43,7 @@ class ResetPasswordController extends Controller
                 ]);
 
             Mail::send('email.forgetPassword', ['token' => $token, 'fullname' => $first_name.' '.$last_name], function($message) use($request){
+                $message->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
                 $message->to($request->email);
                 $message->subject('Your Reset Password Link');
             });

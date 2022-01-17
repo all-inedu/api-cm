@@ -68,7 +68,7 @@ class VerificationController extends Controller
             $subject = "Please verify your email address.";
             Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
                 function($mail) use ($email, $name, $subject) {
-                    $mail->from(getenv('FROM_EMAIL_ADDRESS'), "no-reply@all-inedu.com");
+                    $mail->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
                     $mail->to($email, $name);
                     $mail->subject($subject);
                 });

@@ -32,10 +32,6 @@ use App\Models\Outline;
 //     return $request->user();
 // });
 
-// Route::get('testmail', function() {
-//     return view('email.forgetPassword', ['token' => '1234', 'fullname' => 'manuel eric']);
-// });
-
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 Route::group(['prefix' => 'v1'], function() {
@@ -54,7 +50,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::middleware(['cors'])->group(function() {
-    Route::group(['middleware' => ['jwt.verify', 'cors', 'throttle:40,10']], function () {
+    Route::group(['middleware' => [ 'cors', 'throttle:40,10']], function () {
         
         //* CHECK TOKEN *//
         Route::post('check/token', [AuthController::class, 'checkToken']);

@@ -108,13 +108,13 @@ class AuthController extends Controller
 
         //Error messages
         $messages = [
-            "birthday.older_than" => "You must be 15 years old or above"
+            "birthday.older_than" => "You must be 10 years old or above"
         ];
 
         $validator = Validator::make($request->all(), [
             'first_name'   => 'required|string|max:255',
             'last_name'    => 'required|string|max:255',
-            'birthday'     => 'required|olderThan:14',
+            'birthday'     => 'required|olderThan:9',
             'phone_number' => 'required|max:25',
             'role_id'      => 'required|integer',
             'email'        => 'required|string|email|max:255|unique:users',
@@ -156,7 +156,7 @@ class AuthController extends Controller
             $subject = "Please verify your email address.";
             Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
                 function($mail) use ($email, $name, $subject) {
-                    $mail->from(getenv('FROM_EMAIL_ADDRESS'), "no-reply@all-inedu.com");
+                    $mail->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
                     $mail->to($email, $name);
                     $mail->subject($subject);
                 });

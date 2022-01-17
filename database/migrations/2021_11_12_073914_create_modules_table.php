@@ -16,7 +16,7 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
             $table->string('module_name');
-            $table->text('desc');
+            $table->text('desc')->nullable();
 
             //! TODO - add foreign key to 'roles'
             $table->unsignedBigInteger('category_id');
