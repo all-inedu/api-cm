@@ -17,7 +17,7 @@
 <body style="background: #E6E6E6; padding: 2vw; ">
     <div class="container" style="width: 100%;padding-left:15px;padding-right:15px;margin-left:auto;margin-right:auto;">
         <div class="row text-center border-bottom pb-3 mb-3" style="text-align: center; padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #dee2e6!important; display: flex; flex-wrap: wrap; margin-left: -15px; margin-right: -15px">
-            <div class="col" style="flex-basis: 0;flex-grow: 1;max-width: 100%">
+            <div class="col" style="flex-basis: 0;flex-grow: 1;max-width: 100%; text-align:center;">
                 <img src="{{ asset('img/allin.png') }}" style="width: 200px; height: auto;">
             </div>
         </div>
