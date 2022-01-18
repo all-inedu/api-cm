@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\ReadController;
 use App\Models\Module;
 use App\Models\Outline;
+use Illuminate\Queue\Console\ListenCommand;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +112,9 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::get('act/latest/read', [ListenController::class, 'lastRead']);
         Route::get('act/view/answer/{module_slug}', [ListenController::class, 'viewAnswer']);
+
+        Route::post('notify/mentor', [ListenController::class, 'notifyMentor']);
+        Route::get('user/progress/{id}/{module_id}', [ListenController::class, 'userProgress']);
 
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });

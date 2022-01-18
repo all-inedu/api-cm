@@ -207,12 +207,15 @@ class ProfileController extends Controller
 
         try {
 
-            $user->first_name   = $request->first_name;
-            $user->last_name    = $request->last_name;
-            $user->birthday     = $request->birthday;
-            $user->phone_number = $request->phone_number;
-            $user->address      = $request->address;
-            $user->profile_picture = $fileName;
+            $user->first_name       = $request->first_name;
+            $user->last_name        = $request->last_name;
+            $user->birthday         = $request->birthday;
+            $user->phone_number     = $request->phone_number;
+            $user->address          = $request->address;
+            $user->profile_picture  = $fileName;
+            $user->exp_mentor_id    = $request->mentor_id; //! new
+            $user->exp_mentor_name  = $request->mentor_name; //! new
+            $user->exp_mentor_email = $request->mentor_email; //! new
             $user->save();
 
         } catch (Exception $e) {

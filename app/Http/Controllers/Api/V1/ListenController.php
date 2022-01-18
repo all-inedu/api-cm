@@ -19,18 +19,98 @@ use App\Http\Controllers\Api\V1\UserController;
 use App\Models\AnswerDetail;
 use Symfony\Component\CssSelector\Parser\Shortcut\ElementParser;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Mail;
+use Exception;
+use App\Models\Log_mails;
 
 class ListenController extends Controller
 {
 
     private $user_id;
+    private $user_name;
+    private $exp_mentor_email;
+    private $exp_mentor_name;
+    private $notifyMentorSubject;
 
     public function __construct()
     {
         $user = Auth::user();
         if ($user) {
             $this->user_id = $user->id;
+            $this->user_name = $user->first_name." ".$user->last_name;
+            $this->exp_mentor_name = $user->exp_mentor_name;
+            $this->exp_mentor_email = $user->exp_mentor_email;
         }
+
+        $this->notifyMentorSubject = "Your Mentee's Progress";
+    }
+
+    public function userProgress($id, $module_id)
+    {
+        $progress = DB::select('SELECT SUM(max_group) as total_page_read FROM 
+                    (   
+                        SELECT max(`group`) as max_group 
+                        FROM `last_reads` WHERE user_id = '.$id.' AND module_id = '.$module_id.'
+                        GROUP BY part_id
+                    ) t');
+        $total_progress = !empty($progress) ? $progress[0]->total_page_read : 0;
+
+        $total_page = DB::select('SELECT SUM(jumlah_group) as total_page FROM 
+                    (
+                        SELECT max(`group`) as jumlah_group FROM parts p 
+                        join elements e on e.part_id = p.id
+                        join outlines o on o.id = p.outline_id
+                        join modules m on m.id = o.module_id
+                        where m.id = '.$module_id.'
+                        GROUP BY p.id
+                    ) t');
+        $total_page = !empty($total_page) ? $total_page[0]->total_page : 0;
+        $percentage = round($total_progress / $total_page * 100) == 0 ? 0 : $total_progress / $total_page * 100;
+
+        return response()->json([
+            'success' => true,
+            'data' => array(
+                'percentage' => $percentage
+            )
+        ]);
+    }
+
+    public function notifyMentor(Request $request)
+    {
+        if (!$this->exp_mentor_email) {
+            return response()->json(['success' => true, 'error' => 'Haven\'t input mentor name']);
+        }
+
+        $data = array(
+            'user_id'          => $this->user_id,
+            'user_name'        => $this->user_name,
+            'module_name'      => $request->module_name,
+            'exp_mentor_name'  => $this->exp_mentor_name,
+            'exp_mentor_email' => $this->exp_mentor_email
+        );
+
+        try {
+
+            Mail::send('email.notifyMentor', $data, function ($message) {
+                $message->from(getenv('MAIL_FROM_ADDRESS'), getenv('MAIL_FROM_NAME'));
+                $message->to($this->exp_mentor_email, $this->exp_mentor_name);
+                $message->subject($this->notifyMentorSubject);
+            });
+
+            return response()->json(['success' => true, 'message' => 'Message has been sent']);
+
+        }catch (Exception $exception) {
+
+            $log_mails = new Log_mails();
+            $log_mails->mail_to = $this->exp_mentor_email;
+            $log_mails->student = $this->user_name;
+            $log_mails->message = $exception->getMessage();
+            $log_mails->status = 'not sent';
+            $log_mails->save();
+
+            return response()->json(['success' => false, 'error' => $exception->getMessage()]);
+        }
+
     }
 
     //************************* */
