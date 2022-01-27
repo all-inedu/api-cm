@@ -45,8 +45,9 @@ class ListenController extends Controller
         $this->notifyMentorSubject = "Your Mentee's Progress";
     }
 
-    public function userProgress($id, $module_id)
+    public function userProgress($module_id)
     {
+        $id = $this->user_id;
         $progress = DB::select('SELECT SUM(max_group) as total_page_read FROM 
                     (   
                         SELECT max(`group`) as max_group 
