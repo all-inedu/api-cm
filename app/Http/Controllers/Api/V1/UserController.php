@@ -20,6 +20,7 @@ use DateTime;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Module;
+use PDF;
 
 class UserController extends Controller
 {
@@ -128,7 +129,7 @@ class UserController extends Controller
         return app('App\Http\Controllers\Api\V1\ListenController')->algoLastRead($id);
     }
 
-    public function getUserAnswer($slug, $id)
+    public function getUserAnswer($slug, $id, $download = NULL)
     {
         $answer = Module::with([
             'outlines' => function($query) use ($id) {
@@ -143,6 +144,13 @@ class UserController extends Controller
                 });
             }
         ])->where('slug', $slug)->first();
+
+        if ($download == "download") {
+            return view('pdf/extract', array('answer' => $answer));
+            // echo $answer['outlines'];exit;
+            $pdf = PDF::loadView('pdf/extract', array('answer' => $answer));
+            return $pdf->download('your-progress.pdf');
+        }
 
         return response()->json($answer);
     }
@@ -167,5 +175,4 @@ class UserController extends Controller
 
         return response()->json(compact('user'));
     }
-
 }
