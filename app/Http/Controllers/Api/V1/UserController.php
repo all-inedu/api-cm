@@ -146,8 +146,7 @@ class UserController extends Controller
         ])->where('slug', $slug)->first();
 
         if ($download == "download") {
-            return view('pdf/extract', array('answer' => $answer));
-            // echo $answer['outlines'];exit;
+            // return view('pdf/extract', array('answer' => $answer));
             $pdf = PDF::loadView('pdf/extract', array('answer' => $answer));
             return $pdf->download('your-progress.pdf');
         }

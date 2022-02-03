@@ -26,14 +26,24 @@
         table.table tr td.nopadding {
             padding: 0 !important;
         }
+        ul.list-none {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        table.table img {
+            max-width: auto;
+            width: 300px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     <table class="table" border="1">
         <tr class="header" align="center">
-            <td>No</td>
-            <td>Part Name</td>
-            <td>Question / Answer</td>
+            <td width="2%">No</td>
+            <td width="20%">Part Name</td>
+            <td width="78%">Question / Answer</td>
         </tr>
         @foreach ($answer['outlines'] as $outline)
             @foreach ($outline['parts'] as $part)
@@ -47,17 +57,18 @@
                     <td class="nopadding">
                         <table class="table" border="1">
                             <tr class="header" align="center">
-                                <td>Question</td>
-                                <td>Answer</td>
+                                <td width="70%">Question</td>
+                                <td width="30%">Answer</td>
                             </tr>
                             <tbody>
                                 @foreach ($part['elements'] as $element)
                                 <tr>
-                                    <td>{{ $element->question }}</td>
+                                    <td>{!! $element->question !!}</td>
                                     <td align="center">
+                                        {{-- {{ $element }} --}}
                                         @switch ($element->category_element)
                                             @case("multiple")
-                                                <ul>
+                                                <ul class="list-none">
                                                 @foreach ($element['answersdetails'] as $answer_detail)
                                                     <li>{{ $answer_detail->answer }}</li>
                                                 @endforeach
@@ -65,7 +76,11 @@
                                                 @break
 
                                             @case("blank")
-                                                {{ $element->answer }}
+                                                <ul class="list-none">
+                                                @foreach ($element['answersdetails'] as $answer_detail)
+                                                    <li>{{ $answer_detail->answer }}</li>
+                                                @endforeach
+                                                </ul>
                                                 @break
                                             
                                             @case("file")
