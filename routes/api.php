@@ -51,7 +51,7 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::middleware(['cors'])->group(function() {
-    Route::group(['middleware' => [/*'jwt.verify',*/ 'cors' /*, 'throttle:40,10'*/]], function () {
+    Route::group(['middleware' => ['jwt.verify', 'cors' /*, 'throttle:40,10'*/]], function () {
         
         //* CHECK TOKEN *//
         Route::post('check/token', [AuthController::class, 'checkToken']);
@@ -115,6 +115,7 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::post('notify/mentor', [ListenController::class, 'notifyMentor']);
         Route::get('module/progress/{module_id}', [ListenController::class, 'userProgress']);
+        Route::get('module/{slug}/answer/{download}', [ListenController::class, 'downloadFile']);
         // Route::get('module/create/{module_id?}/{outline_id?}/{part_id?}', [ModuleController::class, 'getDataModule']);
     });
 });

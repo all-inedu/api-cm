@@ -424,4 +424,10 @@ class ListenController extends Controller
         return response()->json(['success' => true, 'data' => compact('module')], 200);
     }
 
+
+    public function downloadFile($slug, $download)
+    {
+        $id = $this->user_id;
+        return app('App\Http\Controllers\Api\V1\UserController')->getUserAnswer($slug, $id, $download);
+    }
 }
