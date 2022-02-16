@@ -345,9 +345,12 @@ class ListenController extends Controller
             //! IF $next_part_id WAS THE LATEST PART IN $outline_id
             if (empty($query_get_next_part)) 
             {
-                $query_get_next_outline = DB::table('outlines')->whereIn('id', function ($query) use ($outline_id, $module_id) {
-                                            return $query->select(DB::raw('MIN(id)'))->from('outlines')->where('id', '>', $outline_id)->where('module_id', $module_id);
-                                        })->select('id as next_outline_id')->first();
+                $query_1 = DB::table('outlines')->where('id', $outline_id)->first();
+                $current_section = $query_1->section_id;
+                
+                $query_get_next_outline = DB::table('outlines')->whereIn('section_id', function ($query) use ($current_section, $module_id) {
+                                            return $query->select(DB::raw('MIN(section_id)'))->from('outlines')->where('section_id', '>', $current_section)->where('module_id', $module_id);
+                                        })->where('module_id', $module_id)->select('id as next_outline_id')->first();
                 
                 $next_outline_id = isset($query_get_next_outline->next_outline_id) ? $query_get_next_outline->next_outline_id : null;
             }
@@ -390,7 +393,7 @@ class ListenController extends Controller
         $outline = Outline::select('outlines.id', 'outlines.name as outline_name', 'sections.id as section_id', 'sections.name as section_name')
                     ->rightJoin('sections', 'sections.id', '=', 'outlines.section_id')
                     ->join('modules', 'modules.id', '=', 'outlines.module_id')
-                    ->where('slug', $slug)->get();
+                    ->where('slug', $slug)->orderBy('outlines.section_id', 'asc')->get();
 
         // $persentase_keseluruhan = 0;
         // // $jumlah_part = 0;
