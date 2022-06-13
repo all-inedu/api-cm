@@ -148,74 +148,68 @@ class ListenController extends Controller
 
             $latest_part = $query_latest_part->latest_part;
             $latest_group = $query_latest_part->latest_group;
-            //// $query_next_part = Element::where('part_id', $latest_part)->whereIn('group', function ($query) use ($latest_group) {
-            ////     return $query->select(DB::raw('MIN(`group`)'))->from('elements')->where('group', '>', $latest_group);
-            //// })->first();
-            
-            // // //! kalau ada group berikutnya di dalam 1 part maka do this
-            //// if (!empty($query_next_part)) {
-            ////     $array[$index]['next_url'] = URL::to('api/v1').'/listen/element/'.$latest_part.'/'.$query_next_part->group;
-            ////     $array[$index]['current_part_id'] = $latest_part;
-            //// }
 
             $get_latest = Part::join('outlines', 'outlines.id', '=', 'parts.outline_id')
                                 ->join('sections', 'sections.id', '=', 'outlines.section_id')
-                                ->where('parts.id', $latest_part)
+                                ->join('modules', 'modules.id', '=', 'outlines.module_id')
+                                ->where('parts.id', $latest_part)->where('modules.status', 1)
                                 ->select('outlines.id', 'parts.title', 'outlines.name', 'sections.name as section_name')
                                 ->first();
-            
-
-            // $array[$index]['current_part_id'] = $latest_part;
-            $array[$index]['outline_id'] = $get_latest->id;
-            $array[$index]['current_part_name'] = $get_latest->title;
-            $array[$index]['current_outline_name'] = $get_latest->name;
-            $array[$index]['section_name'] = $get_latest->section_name;
-            //// $array[$index]['current_group'] = $query->latest_group; 
-
-            $query_taken_date = DB::select('SELECT MIN(created_at) AS taken_date from last_reads WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id);
-            $taken_date = !empty($query_taken_date) ? $query_taken_date[0]->taken_date : null;
-            $array[$index]['taken_date'] = $taken_date;   
-
-            $progress = DB::select('SELECT SUM(max_group) as total_page_read FROM 
-                        (   
-                            SELECT max(`group`) as max_group 
-                            FROM `last_reads` WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id.'
-                            GROUP BY part_id
-                        ) t');
-            $total_progress = !empty($progress) ? $progress[0]->total_page_read : 0;
-            //// $array[$index]['total_progress'] = $total_progress;
-
-            $modules = Module::join('categories', 'categories.id', '=', 'modules.category_id')
-                            ->with('outlines')->with('outlines.parts')->where('modules.id', $read_module->module_id)->where('modules.status', 1)
-                            ->select('modules.id', 'modules.module_name', 'modules.slug', 'categories.name as category_name')
-                            ->get();
-            foreach ($modules as $module) 
-            {
+            if ($get_latest) {
                 
-                $module_id = $module->id;
-                $module_name = $module->module_name;
-                $array[$index]['module_id'] = $module_id;
-                $array[$index]['module_name'] = $module_name;
-                $array[$index]['slug'] = $module->slug;
-                $array[$index]['category_name'] = $module->category_name;
-
-                $total_page = DB::select('SELECT SUM(jumlah_group) as total_page FROM 
-                (
-                    SELECT max(`group`) as jumlah_group FROM parts p 
-                    join elements e on e.part_id = p.id
-                    join outlines o on o.id = p.outline_id
-                    join modules m on m.id = o.module_id
-                    where m.id = '.$module_id.'
-                    GROUP BY p.id
-                ) t');
-                $total_page = !empty($total_page) ? $total_page[0]->total_page : 0;
-                //// $array[$index]['jumlah_group'] = $total_page[0]->total_page;
-                //// $array[$index]['percentage'] = $array[$index]['total_progress'] / $array[$index]['jumlah_group'] * 100;
-                //// return $array;
-                $array[$index]['percentage'] = round($total_progress / $total_page * 100) == 0 ? 0 : $total_progress / $total_page * 100;
+                    // $array[$index]['current_part_id'] = $latest_part;
+                    $array[$index]['outline_id'] = $get_latest->id;
+                    $array[$index]['current_part_name'] = $get_latest->title;
+                    $array[$index]['current_outline_name'] = $get_latest->name;
+                    $array[$index]['section_name'] = $get_latest->section_name;
+                    //// $array[$index]['current_group'] = $query->latest_group; 
+        
+                    $query_taken_date = DB::select('SELECT MIN(created_at) AS taken_date from last_reads WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id);
+                    $taken_date = !empty($query_taken_date) ? $query_taken_date[0]->taken_date : null;
+                    $array[$index]['taken_date'] = $taken_date;   
+        
+                    $progress = DB::select('SELECT SUM(max_group) as total_page_read FROM 
+                                (   
+                                    SELECT max(`group`) as max_group 
+                                    FROM `last_reads` WHERE user_id = '.$id.' AND module_id = '.$read_module->module_id.'
+                                    GROUP BY part_id
+                                ) t');
+                    $total_progress = !empty($progress) ? $progress[0]->total_page_read : 0;
+                    //// $array[$index]['total_progress'] = $total_progress;
+        
+                    $modules = Module::join('categories', 'categories.id', '=', 'modules.category_id')
+                                    ->with('outlines')->with('outlines.parts')->where('modules.id', $read_module->module_id)->where('modules.status', 1)
+                                    ->select('modules.id', 'modules.module_name', 'modules.slug', 'categories.name as category_name')
+                                    ->get();
+                    foreach ($modules as $module) 
+                    {
+                        
+                        $module_id = $module->id;
+                        $module_name = $module->module_name;
+                        $array[$index]['module_id'] = $module_id;
+                        $array[$index]['module_name'] = $module_name;
+                        $array[$index]['slug'] = $module->slug;
+                        $array[$index]['category_name'] = $module->category_name;
+        
+                        $total_page = DB::select('SELECT SUM(jumlah_group) as total_page FROM 
+                        (
+                            SELECT max(`group`) as jumlah_group FROM parts p 
+                            join elements e on e.part_id = p.id
+                            join outlines o on o.id = p.outline_id
+                            join modules m on m.id = o.module_id
+                            where m.id = '.$module_id.'
+                            GROUP BY p.id
+                        ) t');
+                        $total_page = !empty($total_page) ? $total_page[0]->total_page : 0;
+                        //// $array[$index]['jumlah_group'] = $total_page[0]->total_page;
+                        //// $array[$index]['percentage'] = $array[$index]['total_progress'] / $array[$index]['jumlah_group'] * 100;
+                        //// return $array;
+                        $array[$index]['percentage'] = round($total_progress / $total_page * 100) == 0 ? 0 : $total_progress / $total_page * 100;
+                    }
+                $index++;
+                }
             }
-        $index++;
-        }
+
 
 
         //* PISAHIN DATA SESUAI STATUS PROGRESS */
@@ -423,7 +417,13 @@ class ListenController extends Controller
     {
         $module = Module::select('modules.*', 'categories.name as category_name')
                     ->join('categories', 'categories.id', '=', 'modules.category_id')
-                    ->where('slug', $slug)->where('modules.status', 1)->first();
+                    ->where('slug', $slug);
+        $user = Auth::user();
+        if ($user->role_id == 1) {
+            $module->where('modules.status', 1);
+        }
+        $module = $module->first();
+        
         return response()->json(['success' => true, 'data' => compact('module')], 200);
     }
 

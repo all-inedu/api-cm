@@ -144,10 +144,16 @@ class UserController extends Controller
                 });
             }
         ])->where('slug', $slug)->first();
+        
+        if (!$answer) {
+            return response()->json(['success' => false, 'error' => 'Couldn\'t find the module.']);
+        }
+
+        $user = User::find($id);
 
         if ($download == "download") {
             // return view('pdf/extract', array('answer' => $answer));
-            $pdf = PDF::loadView('pdf/extract', array('answer' => $answer));
+            $pdf = PDF::loadView('pdf/extract', array('answer' => $answer, 'user' => $user));
             return $pdf->download('your-progress.pdf');
         }
 

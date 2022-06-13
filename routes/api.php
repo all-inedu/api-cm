@@ -51,6 +51,8 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::middleware(['cors'])->group(function() {
+        
+    Route::get('module/{slug}/answer/user/{id}/{download?}', [UserController::class, 'getUserAnswer']);
     Route::group(['middleware' => ['jwt.verify', 'cors' /*, 'throttle:40,10'*/]], function () {
         
         //* CHECK TOKEN *//
@@ -66,7 +68,6 @@ Route::group(['prefix' => 'v1'], function() {
 
         Route::post('filter/student', [UserController::class, 'filterUser']);
         Route::get('user/progress/{id}', [UserController::class, 'getUserProgress']);
-        Route::get('module/{slug}/answer/user/{id}/{download?}', [UserController::class, 'getUserAnswer']);
 
         //* Module *//
         Route::get('module/{id?}', [ModuleController::class, 'list']);

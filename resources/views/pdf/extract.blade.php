@@ -39,6 +39,17 @@
     </style>
 </head>
 <body>
+    <table cellpadding="5px" width="100%" style="border-collapse: collapse">
+        <tr>
+            <td>Name</td>
+            <td align="right">Module</td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px solid #737272">{{ ucwords($user->first_name.' '.$user->last_name) }}</td>
+            <td style="border-bottom: 1px solid #737272" align="right">{{ $answer->module_name }}</td>
+        </tr>
+    </table>
+    <br><br>
     <table class="table" border="1">
         <tr class="header" align="center">
             <td width="2%">No</td>
@@ -84,9 +95,7 @@
                                                 @break
                                             
                                             @case("file")
-                                                <a href="{{ url('/'.$element->file_path) }}">
-                                                    <button>Download Now</button>
-                                                </a>
+                                                <a href="{{ url('/'.$element->file_path) }}">Download Now</a>
                                                 @break
                                         @endswitch
 
